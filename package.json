@@ -21,6 +21,10 @@
     "test:stage2": "node tests/stage2-summary-regression.js",
     "test:fhir:smoke": "node tests/fhir-stage12-smoke.js",
     "test:fhir:batch": "node tests/fhir-stage12-batch.js 5",
-    "test:ui-render": "node tests/emr-render-smoke.js"
+    "test:ui-render": "node tests/emr-render-smoke.js",
+    "test:browser:stitch-ui": "node scripts/validate-stitch-ui.js"
+  },
+  "dependencies": {
+    "playwright": "^1.58.2"
   }
 }
