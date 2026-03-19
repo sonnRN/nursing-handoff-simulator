@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nursing Handoff Simulation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-backdrop" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="brand-lockup">
+      <div class="brand-mark">HS</div>
+      <div>
+        <p class="eyebrow">Serious Nursing Education Simulator</p>
+        <h1>Nursing Handoff Simulation</h1>
+      </div>
+    </div>
+    <div class="status-strip">
+      <span class="status-pill" id="apiStatusPill">Initializing</span>
+      <span class="status-pill subtle" id="voiceStatusPill">Voice loading</span>
+    </div>
+  </header>
+
+  <main class="shell">
+    <aside class="rail">
+      <section class="rail-card">
+        <p class="rail-label">Simulation Flow</p>
+        <ol class="stepper" id="stepperList"></ol>
+      </section>
+      <section class="rail-card">
+        <p class="rail-label">Current Case</p>
+        <div id="patientSnapshot"></div>
+      </section>
+      <section class="rail-card">
+        <p class="rail-label">Learner Notes</p>
+        <textarea id="prepNotesInput" class="notes-input" placeholder="Capture your own handoff notes while reviewing the EMR."></textarea>
+      </section>
+      <section class="rail-card qa-only" id="qaPanel">
+        <p class="rail-label">QA Helpers</p>
+        <p class="helper-copy">Local runs can prefill a demo transcript and follow-up answers for end-to-end validation.</p>
+        <div class="stack-row">
+          <button class="btn btn-secondary" id="runDemoSessionBtn" data-action="run-demo-session">Run Demo Session</button>
+        </div>
+        <div class="stack-row">
+          <button class="btn btn-secondary" id="qaBriefingBtn" data-action="qa-jump" data-target="briefing">Open Briefing</button>
+          <button class="btn btn-secondary" id="qaEmrBtn" data-action="qa-jump" data-target="emr">Open EMR</button>
+          <button class="btn btn-secondary" id="qaRecordBtn" data-action="qa-jump" data-target="record">Open Recorder</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="workspace">
+      <div class="progress-bar">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+
+      <section class="view is-active" data-step="landing">
+        <div class="hero-card">
+          <div class="hero-copy">
+            <p class="eyebrow">Premium voice-style simulation</p>
+            <h2>Review the chart. Deliver the handoff. Defend your synthesis.</h2>
+            <p class="hero-text">
+              This MVP focuses on one realistic inpatient case that evolves across several hospital days.
+              Your job is to separate what changed from what still matters now, then give a clinically safe nursing handoff.
+            </p>
+            <div class="hero-actions">
+              <button id="startSimulationBtn" class="btn btn-primary" data-action="goto" data-target="briefing">Enter Scenario</button>
+              <a class="btn btn-secondary" href="algorithm-demo.html">View legacy algorithm demo</a>
+            </div>
+          </div>
+          <div class="hero-summary" id="landingScenarioCard"></div>
+        </div>
+      </section>
+
+      <section class="view" data-step="briefing">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Step 1</p>
+              <h2>Scenario Briefing</h2>
+            </div>
+            <button class="btn btn-primary" data-action="goto" data-target="emr">Start Chart Review</button>
+          </div>
+          <div class="briefing-grid">
+            <section class="info-card" id="briefingCase"></section>
+            <section class="info-card" id="briefingGoals"></section>
+            <section class="info-card" id="briefingShiftHistory"></section>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-step="emr">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Step 2</p>
+              <h2>EMR Review</h2>
+            </div>
+            <button class="btn btn-primary" data-action="goto" data-target="record">Continue To Handoff</button>
+          </div>
+          <div class="timeline-row" id="dateTabs"></div>
+          <div class="tab-row" id="emrTabs"></div>
+          <div class="emr-grid">
+            <section class="emr-main" id="emrMainContent"></section>
+            <aside class="emr-side" id="emrSideContent"></aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-step="record">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Step 3</p>
+              <h2>Verbal Handoff</h2>
+            </div>
+            <button class="btn btn-secondary" data-action="goto" data-target="emr">Back To Chart</button>
+          </div>
+          <div class="recording-layout">
+            <section class="recorder-card" id="handoffRecorderCard"></section>
+            <section class="info-card" id="handoffExpectations"></section>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-step="confirm">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Step 4</p>
+              <h2>Transcript Confirmation</h2>
+            </div>
+            <button class="btn btn-primary" data-action="start-followup">Submit And Continue</button>
+          </div>
+          <div class="transcript-layout">
+            <section class="info-card">
+              <p class="section-label">Editable transcript</p>
+              <textarea id="handoffTranscriptInput" class="transcript-input"></textarea>
+              <div class="stack-row">
+                <button class="btn btn-secondary" data-action="goto" data-target="record">Re-record</button>
+                <button class="btn btn-secondary qa-only" id="demoTranscriptBtn" data-action="load-demo-transcript">Load demo transcript</button>
+              </div>
+            </section>
+            <section class="info-card" id="transcriptSupport"></section>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-step="followup">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Step 5</p>
+              <h2>AI Receiver Follow-up</h2>
+            </div>
+            <button class="btn btn-primary" data-action="finish-followup">Generate Final Feedback</button>
+          </div>
+          <div class="followup-layout">
+            <section class="chat-thread" id="followupThread"></section>
+            <aside class="followup-side">
+              <section class="info-card" id="followupPromptCard"></section>
+              <section class="recorder-card compact" id="followupRecorderCard"></section>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" data-step="feedback">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Step 6</p>
+              <h2>Structured Feedback</h2>
+            </div>
+            <div class="stack-row">
+              <button class="btn btn-secondary" data-action="retry-session">Retry Same Scenario</button>
+              <button class="btn btn-primary" data-action="restart-app">Reset Simulation</button>
+            </div>
+          </div>
+          <div id="feedbackContent"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="runtime-config.js" defer></script>
+  <script src="src/simulation/scenario.js" defer></script>
+  <script src="src/simulation/evaluator.js" defer></script>
+  <script src="handoff-engine.js" defer></script>
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "emr-demo-harness",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server/httpServer.js",
+    "test": "node scripts/run-node-tests.js",
+    "test:mcp": "node tests/mcp-patients-smoke.js",
+    "test:synthea": "node tests/synthea-source-smoke.js",
+    "test:mcp:wiring": "node tests/mcp-runtime-wiring-smoke.js",
+    "test:mcp:stdio": "node tests/mcp-stdio-smoke.js",
+    "test:mcp:gateway": "node tests/mcp-gateway-regression.js",
+    "test:server": "node tests/http-server-smoke.js",
+    "test:vercel": "node tests/vercel-adapter-smoke.js",
+    "test:engine": "node tests/canonical-engine-smoke.js",
+    "mcp:server": "node src/mcp/server/fhirMcpServer.js",
+    "build:public-demo-data": "node scripts/build-public-demo-data.js",
+    "test:public-demo-bundle": "node tests/public-demo-bundle-smoke.js",
+    "test:emr:patients50": "node tests/emr-patient-list-50-smoke.js",
+    "test:stage2": "node tests/stage2-summary-regression.js",
+    "test:fhir:smoke": "node tests/fhir-stage12-smoke.js",
+    "test:fhir:batch": "node tests/fhir-stage12-batch.js 5",
+    "test:ui-render": "node tests/emr-render-smoke.js"
+  }
+}
