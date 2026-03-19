@@ -9,14 +9,44 @@
   const TABS = [["overview", "종합 정보"], ["trends", "추이 보드"], ["meds", "투약 / 변경"], ["notes", "간호 기록"], ["history", "교대 기록"]];
 
   function navButton(icon, active, action, value, e) {
-    const classes = active ? "w-10 h-10 flex items-center justify-center text-white bg-primary rounded-lg" : "w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all";
-    const attrs = action === "select-tab" ? `data-action="${action}" data-tab="${value}"` : action === "goto" ? `data-action="${action}" data-target="${value}"` : `data-action="${action}"`;
-    return `<button class="${classes}" type="button" ${attrs}><span class="material-symbols-outlined">${e(icon)}</span></button>`;
+    let resolvedIcon = icon;
+    let resolvedActive = active;
+    let resolvedAction = action;
+    let resolvedValue = value;
+
+    if (icon === "dashboard" && value === "briefing") {
+      resolvedValue = "dashboard";
+    } else if (icon === "person" && value === "emr") {
+      resolvedIcon = "person_search";
+      resolvedActive = false;
+      resolvedAction = "goto";
+      resolvedValue = "worklist";
+    } else if (icon === "medication" && action === "select-tab") {
+      resolvedIcon = "monitoring";
+      resolvedActive = true;
+      resolvedAction = "goto";
+      resolvedValue = "emr";
+    } else if (icon === "lab_research" && action === "select-tab") {
+      resolvedIcon = "school";
+      resolvedActive = false;
+      resolvedAction = "goto";
+      resolvedValue = "records";
+    }
+
+    const classes = resolvedActive ? "w-10 h-10 flex items-center justify-center text-white bg-primary rounded-lg" : "w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 rounded-lg transition-all";
+    const attrs = resolvedAction === "select-tab" ? `data-action="${resolvedAction}" data-tab="${resolvedValue}"` : resolvedAction === "goto" ? `data-action="${resolvedAction}" data-target="${resolvedValue}"` : `data-action="${resolvedAction}"`;
+    return `<button class="${classes}" type="button" ${attrs}><span class="material-symbols-outlined">${e(resolvedIcon)}</span></button>`;
   }
 
   function side(icon, text, active, action, target, e) {
+    let resolvedAction = action;
+    let resolvedTarget = target;
+    if (icon === "dashboard" && !resolvedAction) {
+      resolvedAction = "goto";
+      resolvedTarget = "dashboard";
+    }
     const classes = active ? "flex items-center gap-3 px-4 py-3 text-blue-700 font-bold bg-blue-50 rounded-lg transition-transform translate-x-1" : "flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 transition-transform hover:translate-x-1";
-    const attrs = action ? ` data-action="${action}"${target ? ` data-target="${target}"` : ""}` : "";
+    const attrs = resolvedAction ? ` data-action="${resolvedAction}"${resolvedTarget ? ` data-target="${resolvedTarget}"` : ""}` : "";
     return `<button class="${classes} w-full text-left" type="button"${attrs}><span class="material-symbols-outlined">${e(icon)}</span><span class="font-sans text-sm tracking-normal">${e(text)}</span></button>`;
   }
 
@@ -41,7 +71,7 @@
 
   function qa(vm) {
     if (!vm.qaMode) return "";
-    return `<div class="qa-panel bg-white border border-slate-200 shadow-ambient rounded-2xl p-4"><p class="text-[11px] font-bold uppercase tracking-[0.24em] text-primary mb-3">QA tools</p><div class="grid grid-cols-2 gap-2"><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="run-demo-session">Run demo</button><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="goto" data-target="briefing">Briefing</button><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="goto" data-target="emr">EMR</button><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="goto" data-target="record">Record</button></div></div><div class="qa-fab"><div class="rounded-full bg-primary text-white px-4 py-2 text-xs font-bold shadow-ambient">QA MODE</div></div>`;
+    return `<div class="qa-shell"><div class="qa-panel bg-white border border-slate-200 shadow-ambient rounded-2xl p-4"><p class="text-[11px] font-bold uppercase tracking-[0.24em] text-primary mb-3">QA tools</p><div class="grid grid-cols-2 gap-2"><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="run-demo-session">Run demo</button><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="goto" data-target="briefing">Briefing</button><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="goto" data-target="emr">EMR</button><button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="goto" data-target="record">Record</button></div></div><div class="qa-fab"><button type="button" class="qa-trigger rounded-full bg-primary text-white px-4 py-2 text-xs font-bold shadow-ambient">QA MODE</button></div></div>`;
   }
 
   function emrMain(vm) {

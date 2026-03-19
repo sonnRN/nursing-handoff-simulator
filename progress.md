@@ -143,5 +143,22 @@ Original prompt: [$develop-web-game](C:\\Users\\gse06\\.codex\\skills\\develop-w
     - `transcriptReady: true`
     - `followupQuestions: 3`
     - `followupAnswers: 3`
-    - `feedbackReady: true`
-    - `historyCount: 4`
+  - `feedbackReady: true`
+  - `historyCount: 4`
+
+## Follow-up UI fixes
+
+- Treat Stitch MCP and the Stitch project screens as the UI source of truth for further changes.
+- Updated QA affordance so the `QA MODE` pill stays visible, but the `QA tools` panel only appears on hover/focus.
+- Increased admin-screen top spacing and made the desktop side navigation scrollable so the dashboard header/menu no longer clips at the top.
+- Kept the Stitch clinical simulation shell but remapped the left mini rail so the four visible icons now navigate to real app sections:
+  - dashboard
+  - worklist
+  - emr
+  - records
+- Updated `scripts/validate-stitch-ui.js` to hover the QA trigger before navigation, then move the cursor away before screenshots so captured states match the default UI.
+- Revalidated:
+  - `node tests/http-server-smoke.js`
+  - `node tests/simulation-api-smoke.js`
+  - `npm run test:browser:stitch-ui`
+  - direct Playwright check confirming left-rail navigation reaches `dashboard`, `worklist`, and `records` from the simulation screen.

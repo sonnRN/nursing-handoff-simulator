@@ -140,19 +140,44 @@ textarea {
   background: rgba(255, 245, 245, 0.98);
 }
 
-.qa-fab {
+.qa-shell {
   position: fixed;
   left: 20px;
   bottom: 20px;
   z-index: 90;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.qa-fab,
+.qa-panel {
+  position: static;
+}
+
+.qa-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .qa-panel {
-  position: fixed;
-  left: 20px;
-  bottom: 72px;
-  z-index: 90;
   width: min(360px, calc(100vw - 40px));
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease, visibility 0s linear 180ms;
+}
+
+.qa-shell:hover .qa-panel,
+.qa-shell:focus-within .qa-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition-delay: 0s;
 }
 
 .metric-rail-bar {

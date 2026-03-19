@@ -11,7 +11,7 @@
 
   function qa(vm) {
     if (!vm.qaMode) return "";
-    return `<div class="qa-panel bg-white border border-slate-200 shadow-ambient rounded-2xl p-4">
+    return `<div class="qa-shell"><div class="qa-panel bg-white border border-slate-200 shadow-ambient rounded-2xl p-4">
       <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-primary mb-3">QA tools</p>
       <div class="grid grid-cols-2 gap-2">
         <button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="run-demo-session">Run demo</button>
@@ -22,7 +22,7 @@
         <button class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200 transition-colors" data-action="goto" data-target="feedback">Report</button>
       </div>
     </div>
-    <div class="qa-fab"><div class="rounded-full bg-primary text-white px-4 py-2 text-xs font-bold shadow-ambient">QA MODE</div></div>`;
+    <div class="qa-fab"><button type="button" class="qa-trigger rounded-full bg-primary text-white px-4 py-2 text-xs font-bold shadow-ambient">QA MODE</button></div></div>`;
   }
 
   function topBar(vm, placeholder) {
@@ -59,7 +59,7 @@
       </button>`;
     }
 
-    return `<aside class="hidden md:flex flex-col h-screen w-64 bg-slate-50 p-4 space-y-2 shrink-0 fixed left-0 top-0">
+    return `<aside class="hidden md:flex flex-col w-64 bg-slate-50 p-4 pb-6 space-y-2 shrink-0 fixed inset-y-0 left-0 overflow-y-auto">
       <div class="mb-8 px-4 py-6">
         <h1 class="text-lg font-black text-blue-900 tracking-tighter">Digital Clinician</h1>
         <p class="text-xs text-slate-500 font-medium">${e("4W Telemetry Nursing")}</p>
@@ -140,7 +140,7 @@
       ${sideNav("dashboard", e)}
       <div class="flex-1 flex flex-col min-w-0 md:ml-64">
         ${topBar(vm, "환자 또는 시뮬레이션 검색")}
-        <main class="flex-1 overflow-y-auto bg-surface p-6 md:p-10 pt-24">
+        <main class="flex-1 overflow-y-auto bg-surface p-6 md:p-10 pt-28 md:pt-32">
           <div class="max-w-7xl mx-auto">
             <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
               <div>
@@ -233,7 +233,7 @@
       ${sideNav("worklist", e)}
       <div class="flex-1 flex flex-col min-w-0 md:ml-64">
         ${topBar(vm, "환자 이름 또는 등록번호 검색")}
-        <main class="flex-1 pt-24 pb-24 md:pb-8 px-4 sm:px-6 lg:px-8">
+        <main class="flex-1 pt-28 md:pt-32 pb-24 md:pb-8 px-4 sm:px-6 lg:px-8">
           <div class="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 max-w-[1400px] mx-auto">
             <div>
               <h2 class="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight mb-1">환자 명단</h2>
@@ -263,7 +263,7 @@
       ${sideNav("records", e)}
       <div class="flex flex-col md:ml-64 min-h-screen">
         ${topBar(vm, "기록 또는 모듈 검색")}
-        <main class="flex-1 overflow-y-auto bg-surface p-8 pt-24">
+        <main class="flex-1 overflow-y-auto bg-surface p-8 pt-28 md:pt-32">
           <div class="max-w-7xl mx-auto mb-10">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
