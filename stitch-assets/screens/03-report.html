@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>시뮬레이션 결과 | Digital Clinician</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-lowest": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#171c22",
+                        "surface-dim": "#d6dae2",
+                        "primary-container": "#005eb8",
+                        "on-surface-variant": "#424752",
+                        "surface-tint": "#005db6",
+                        "inverse-on-surface": "#edf1f9",
+                        "on-tertiary-container": "#95eda4",
+                        "on-primary-container": "#c8daff",
+                        "inverse-surface": "#2c3137",
+                        "secondary-fixed": "#7af6eb",
+                        "primary-fixed": "#d6e3ff",
+                        "on-error": "#ffffff",
+                        "on-background": "#171c22",
+                        "secondary": "#006a63",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#dee3eb",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#005323",
+                        "primary": "#00478d",
+                        "tertiary": "#005324",
+                        "surface-container-highest": "#dee3eb",
+                        "secondary-container": "#77f4e8",
+                        "on-tertiary-fixed": "#00210a",
+                        "inverse-primary": "#a9c7ff",
+                        "tertiary-fixed": "#9df6ac",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#c2c6d4",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e4e8f0",
+                        "surface-container": "#eaeef6",
+                        "surface-container-low": "#f0f4fc",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#006f68",
+                        "surface": "#f7f9ff",
+                        "surface-bright": "#f7f9ff",
+                        "on-secondary-fixed": "#00201d",
+                        "outline": "#727783",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "on-primary-fixed": "#001b3d",
+                        "tertiary-fixed-dim": "#82da92",
+                        "background": "#f7f9ff",
+                        "tertiary-container": "#0b6e33",
+                        "on-primary-fixed-variant": "#00468c",
+                        "on-secondary-fixed-variant": "#00504b",
+                        "secondary-fixed-dim": "#5bdacf"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-bg { background-color: rgba(240, 244, 252, 0.7); }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 py-3">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-blue-800">Digital Clinician</span>
+<div class="hidden md:flex items-center bg-surface-container-low px-4 py-1.5 rounded-full border-none">
+<span class="material-symbols-outlined text-outline mr-2 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm font-label w-64" placeholder="기록 검색..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100/50 transition-colors rounded-full transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined text-slate-500">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-100/50 transition-colors rounded-full transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined text-slate-500">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden ml-2 ring-2 ring-primary-fixed">
+<img alt="Nurse Profile" class="w-full h-full object-cover" data-alt="Portrait of a female healthcare professional in blue scrubs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-Mz-EHdrjtKN6kyPmeDZzLu_lb4ljOdug0is5w-r_zm8T1VoIQPOupW9-1mqcQ56I8K9Mh0dReRIiUoSIl6XX008tNls7qUSBnqTbvnJiATcNY34wtJ8jD4u0VR0UHXBT6z91D0ofUXuASkqZvGeS4e38yhfgpVFsRgReEZLDWymlg78OH7Tv3uOcSLVVjvPZnTabUJ8BeEFifXNrzBiULGv4YtP8UeFkGQHoG3Fd0OGLwVJU6cSMFg4T-x9-yan-sxfg2fCwX2sT"/>
+</div>
+</div>
+</header>
+<div class="flex pt-16 min-h-screen">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-[calc(100vh-64px)] w-64 p-4 space-y-2 bg-slate-50 sticky top-16">
+<div class="px-4 py-6">
+<h2 class="text-lg font-black text-blue-900 leading-tight">임상 운영</h2>
+<p class="text-xs text-slate-500 font-label uppercase tracking-widest">4B 병동 - 급성기 간호</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-sans text-sm tracking-normal">대시보드</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">person_search</span>
+<span class="font-sans text-sm tracking-normal">환자 명단</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-blue-700 font-bold bg-blue-50 rounded-lg transition-transform translate-x-1" href="#">
+<span class="material-symbols-outlined">model_training</span>
+<span class="font-sans text-sm tracking-normal">시뮬레이션 훈련</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600 transition-transform hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-sans text-sm tracking-normal">학습 기록</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-slate-200 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-sans text-sm">고객 센터</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-blue-600" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-sans text-sm">로그아웃</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 p-8 lg:p-12 overflow-y-auto">
+<!-- Hero Header Section -->
+<section class="mb-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<nav class="flex items-center gap-2 mb-4">
+<span class="text-xs font-label text-on-surface-variant uppercase tracking-widest">시뮬레이션 시리즈</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-xs font-label text-primary font-bold uppercase tracking-widest">급성 호흡 부전</span>
+</nav>
+<h1 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">수행 분석 리포트</h1>
+<p class="text-on-surface-variant max-w-2xl font-body">세션 ID: #SIM-2023-4492 • 완료일: 2023년 10월 24일 • 케이스: 수술 후 폐색전증</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-surface-container-high px-5 py-2.5 rounded-xl font-label text-sm font-semibold hover:bg-surface-container-highest transition-colors">PDF 다운로드</button>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-xl font-label text-sm font-bold shadow-sm hover:opacity-90 transition-all active:scale-95">결과 공유</button>
+</div>
+</div>
+</section>
+<!-- Key Metrics Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<!-- Score Card -->
+<div class="md:col-span-2 bg-surface-container-lowest p-8 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/20 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+<div>
+<span class="text-xs font-label font-bold text-secondary uppercase tracking-tighter">임상 숙련도</span>
+<div class="flex items-baseline gap-2 mt-4">
+<span class="text-6xl font-headline font-black tracking-tighter text-on-surface">94</span>
+<span class="text-2xl font-headline font-bold text-on-surface-variant">/100</span>
+</div>
+</div>
+<div class="mt-8 flex items-center gap-4">
+<div class="flex-1 bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 94%"></div>
+</div>
+<span class="text-sm font-bold text-secondary font-label">평균 대비 +12%</span>
+</div>
+</div>
+<!-- Secondary Metric Cards -->
+<div class="bg-surface-container-low p-6 rounded-xl">
+<span class="material-symbols-outlined text-primary mb-4" style="font-variation-settings: 'FILL' 1;">timer</span>
+<h3 class="text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">대응 시간</h3>
+<p class="text-2xl font-headline font-bold mt-2 text-on-surface">4분 12초</p>
+<div class="mt-2 inline-flex items-center gap-1 text-[10px] font-bold text-tertiary-container bg-on-tertiary-container/20 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[12px]">trending_down</span> 매우 우수
+                    </div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-error">
+<span class="material-symbols-outlined text-error mb-4">warning</span>
+<h3 class="text-xs font-label font-bold text-on-surface-variant uppercase tracking-widest">중대 오류</h3>
+<p class="text-2xl font-headline font-bold mt-2 text-on-surface">0</p>
+<p class="text-[10px] mt-2 font-label text-on-surface-variant">프로토콜을 완벽하게 준수함</p>
+</div>
+</div>
+<!-- Structured SBAR Feedback & Performance Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+<!-- Detailed Feedback (Asymmetrical Layout) -->
+<div class="lg:col-span-2 space-y-6">
+<h2 class="text-xl font-headline font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">analytics</span>
+                        근거 기반 피드백
+                    </h2>
+<div class="space-y-4">
+<!-- Situation/Action -->
+<div class="bg-surface-container-low p-6 rounded-xl">
+<div class="flex items-start gap-4">
+<div class="bg-primary text-white p-2 rounded-lg">
+<span class="material-symbols-outlined">clinical_notes</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-label font-bold text-on-surface uppercase mb-2">상황 평가 (Situation Assessment)</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                        환자의 산소포화도 저하 발생 후 <span class="text-primary font-bold">18초</span> 이내에 갑작스러운 빈맥과 말초 청색증을 정확히 식별했습니다. 수술 직후 상태임을 고려하여 수술 부위의 혈종 여부를 우선 확인한 초기 평가는 매우 적절했습니다.
+                                    </p>
+</div>
+</div>
+</div>
+<!-- Recommendations - High Contrast Block -->
+<div class="bg-secondary-container p-6 rounded-xl">
+<div class="flex items-start gap-4">
+<div class="bg-secondary text-white p-2 rounded-lg">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-label font-bold text-on-secondary-container uppercase mb-2">임상 권고 사항</h4>
+<ul class="space-y-3">
+<li class="flex gap-3 text-sm text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+<span>15L 비재호흡 마스크 적용에도 SpO2 반응이 없을 경우, 신속대응팀(RRT) 호출 시점을 더 앞당기는 것을 고려하십시오.</span>
+</li>
+<li class="flex gap-3 text-sm text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+<span>수액 일시 투여(Bolus)는 시기적절했으나, 고압 주입 전 정맥로 확보 상태(IV patency) 확인 과정을 반드시 기록하십시오.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Vital Sign Performance Chart (Visual Representation) -->
+<div class="bg-surface-container-lowest rounded-xl p-8 border border-transparent shadow-[0_12px_32px_rgba(23,28,34,0.04)]">
+<h3 class="text-sm font-label font-bold text-on-surface uppercase mb-6 tracking-wide">활력 징후 추이 추적</h3>
+<div class="h-64 flex items-end gap-3 px-4 relative">
+<!-- Simulated Chart Bars -->
+<div class="flex-1 bg-primary/10 rounded-t-lg relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg transition-all h-[40%] group-hover:h-[45%]"></div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-label text-outline">T-10m</span>
+</div>
+<div class="flex-1 bg-primary/10 rounded-t-lg relative group">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg transition-all h-[65%] group-hover:h-[70%]"></div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-label text-outline">T-5m</span>
+</div>
+<div class="flex-1 bg-error/10 rounded-t-lg relative group">
+<div class="absolute bottom-0 w-full bg-error rounded-t-lg transition-all h-[95%] group-hover:h-[100%]"></div>
+<span class="absolute -top-8 left-1/2 -translate-x-1/2 text-[10px] font-bold text-error bg-error-container px-2 py-0.5 rounded">위험 발생</span>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-label text-outline">Event</span>
+</div>
+<div class="flex-1 bg-secondary/10 rounded-t-lg relative group">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg transition-all h-[60%] group-hover:h-[65%]"></div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-label text-outline">T+5m</span>
+</div>
+<div class="flex-1 bg-secondary/10 rounded-t-lg relative group">
+<div class="absolute bottom-0 w-full bg-secondary rounded-t-lg transition-all h-[30%] group-hover:h-[35%]"></div>
+<span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-label text-outline">T+10m</span>
+</div>
+<!-- Axis Labels -->
+<div class="absolute left-0 h-full w-full border-b border-outline-variant/30 flex flex-col justify-between pointer-events-none">
+<div class="border-t border-outline-variant/10 w-full h-0"></div>
+<div class="border-t border-outline-variant/10 w-full h-0"></div>
+<div class="border-t border-outline-variant/10 w-full h-0"></div>
+</div>
+</div>
+<div class="mt-12 space-y-3">
+<div class="flex items-center justify-between text-xs font-label">
+<span class="text-on-surface-variant">인지 부하</span>
+<span class="font-bold text-on-surface">보통 (6/10)</span>
+</div>
+<div class="flex items-center justify-between text-xs font-label">
+<span class="text-on-surface-variant">진단 정확도</span>
+<span class="font-bold text-secondary">높음 (98%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Learning Objectives Checklist -->
+<section class="mb-20">
+<div class="bg-surface-container-low rounded-2xl p-8">
+<h3 class="text-lg font-headline font-bold mb-6">숙련도 체크리스트</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 transition-all hover:shadow-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="text-sm font-bold font-label">기도 관리</p>
+<p class="text-[11px] text-on-surface-variant">최적의 체위 유지 달성</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 transition-all hover:shadow-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<div>
+<p class="text-sm font-bold font-label">SBAR 인수인계</p>
+<p class="text-[11px] text-on-surface-variant">명확하고 전문적인 보고</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 transition-all hover:shadow-sm border-2 border-primary-fixed">
+<span class="material-symbols-outlined text-primary">pending</span>
+<div>
+<p class="text-sm font-bold font-label">보호자 소통</p>
+<p class="text-[11px] text-on-surface-variant">부분 완료 (진행 중)</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- BottomNavBar (Simulation Controls context) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-3xl">
+<div class="flex justify-center items-center gap-8 px-10 py-4 w-full">
+<button class="text-slate-500 flex flex-col items-center active:scale-90 transition-all hover:opacity-90">
+<span class="material-symbols-outlined">play_arrow</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">시작</span>
+</button>
+<button class="text-slate-500 flex flex-col items-center active:scale-90 transition-all hover:opacity-90">
+<span class="material-symbols-outlined">pause</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">일시정지</span>
+</button>
+<button class="bg-gradient-to-br from-blue-700 to-blue-500 text-white rounded-full px-6 py-2 flex items-center gap-2 active:scale-90 transition-all hover:opacity-90">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="font-mono text-[10px] uppercase tracking-widest">완료</span>
+</button>
+</div>
+</nav>
+<!-- Contextual Floating Action Button -->
+<div class="fixed bottom-8 right-8 z-40">
+<button class="w-16 h-16 rounded-full bg-primary text-white shadow-xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all group overflow-hidden relative">
+<div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</div>
+</body></html>

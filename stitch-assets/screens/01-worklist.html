@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9ff;
+            color: #171c22;
+        }
+        .label-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container": "#eaeef6",
+                        "secondary-container": "#77f4e8",
+                        "surface-dim": "#d6dae2",
+                        "tertiary": "#005324",
+                        "primary": "#00478d",
+                        "tertiary-container": "#0b6e33",
+                        "surface-container-high": "#e4e8f0",
+                        "secondary-fixed": "#7af6eb",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#00504b",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "on-surface": "#171c22",
+                        "outline-variant": "#c2c6d4",
+                        "on-tertiary-fixed-variant": "#005323",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-primary": "#a9c7ff",
+                        "inverse-on-surface": "#edf1f9",
+                        "tertiary-fixed": "#9df6ac",
+                        "surface-variant": "#dee3eb",
+                        "primary-fixed": "#d6e3ff",
+                        "inverse-surface": "#2c3137",
+                        "secondary-fixed-dim": "#5bdacf",
+                        "secondary": "#006a63",
+                        "on-surface-variant": "#424752",
+                        "on-background": "#171c22",
+                        "background": "#f7f9ff",
+                        "surface-tint": "#005db6",
+                        "surface-container-low": "#f0f4fc",
+                        "on-primary-container": "#c8daff",
+                        "on-tertiary-fixed": "#00210a",
+                        "surface": "#f7f9ff",
+                        "on-tertiary-container": "#95eda4",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9ff",
+                        "tertiary-fixed-dim": "#82da92",
+                        "on-primary-fixed-variant": "#00468c",
+                        "on-error-container": "#93000a",
+                        "outline": "#727783",
+                        "primary-container": "#005eb8",
+                        "on-primary-fixed": "#001b3d",
+                        "surface-container-highest": "#dee3eb",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "on-secondary-container": "#006f68",
+                        "on-secondary-fixed": "#00201d"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background min-h-screen flex">
+<!-- SideNavBar Component -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-slate-50 border-r-0 p-4 space-y-2 shrink-0 fixed left-0 top-0">
+<div class="mb-8 px-2">
+<h1 class="text-lg font-black text-blue-900 tracking-tighter">Clinical Ops</h1>
+<p class="text-xs text-slate-500 font-medium">제4병동 - 급성기 간호</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:text-blue-600 transition-transform translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span class="text-sm tracking-normal">대시보드</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-blue-700 font-bold bg-blue-50 rounded-lg transition-transform translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="person_search">person_search</span>
+<span class="text-sm tracking-normal">환자 명단</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:text-blue-600 transition-transform translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="model_training">model_training</span>
+<span class="text-sm tracking-normal">시뮬레이션 교육</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:text-blue-600 transition-transform translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="school">school</span>
+<span class="text-sm tracking-normal">학습 기록</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:text-blue-600 transition-transform translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="help_outline">help_outline</span>
+<span class="text-sm tracking-normal">고객 센터</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 hover:text-blue-600 transition-transform translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="logout">logout</span>
+<span class="text-sm tracking-normal">로그아웃</span>
+</a>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0 md:ml-64">
+<!-- TopAppBar Component -->
+<header class="fixed top-0 right-0 left-0 md:left-64 z-50 bg-white/70 backdrop-blur-xl shadow-sm flex justify-between items-center px-6 py-3">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-high border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/40 placeholder:text-slate-500 font-label" placeholder="환자 이름 또는 등록번호 검색" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 rounded-full transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 ml-2">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Sarah Jenkins, RN</p>
+<p class="text-[10px] text-on-surface-variant font-label">담당 간호사</p>
+</div>
+<img alt="Nurse Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-fixed" data-alt="Portrait of a female nurse in professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3zD2th7B9fwOBAAkfk5bSgedzZRh7dIsVczCEELRVB-r7ELcum_zF63kKqe8WilVRkNeEx-lruMHnhP1fAY8Xo64QoEacPFnaXSV12DjgPdimBDqAhVPCcmpCuL2WkZ3rbe5e6m2i_5SyzgqghKOTneUP9F9qdN1mXRnWAoInl82oF5os_JDZ-3_uqMfiV2ZzxjuDwwgUqMouCyiexKt8KWPBsy4djFa11pXFo5Q8-WtfghkaHUJ0KNEmIxmv4A18M1dM7q-okaKQ"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 pt-24 pb-24 md:pb-8 px-4 sm:px-6 lg:px-8">
+<!-- Header Section -->
+<div class="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+<div>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight mb-1">환자 명단</h2>
+<p class="text-on-surface-variant text-sm font-label">제4병동 - 급성기 간호 | 2024년 5월 24일 금요일</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-high text-on-surface px-4 py-2 rounded-xl text-xs font-bold hover:bg-surface-container-highest transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        필터링
+                    </button>
+<button class="bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        새 시뮬레이션
+                    </button>
+</div>
+</div>
+<!-- Patient List -->
+<div class="grid grid-cols-1 gap-4 max-w-[1400px]">
+<!-- Patient Card 1 -->
+<div class="bg-surface-container-low rounded-2xl p-4 sm:p-5 hover:bg-surface-container transition-colors group">
+<div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
+<!-- Patient Identity -->
+<div class="flex items-center gap-4 lg:w-[280px] shrink-0">
+<img alt="Patient Avatar" class="w-12 h-12 rounded-full object-cover shrink-0" data-alt="Senior male patient headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj2Z4jTX2TYU6NpqOZWEKIUyUxj50FtWzkwmhzsh_sO3VulscWMYOfaoTYpOSjAtKbsOYRkmiwnpTfF0PtCEhFXNYfpFibsd7kSsFuFlCwCTyGG1bsFmawviMNFMqKqqfSIpL4wHdqojaKeyJqraDTLMUHBZA_Ret7xz3OZbAUh-Xb8vB9JUGUL0VsA8pUUqYiknMitZrggs36SGy4t1COWe9PDBS7gbF1xTElUsDDKmczuayB2nxXVS_VLdXIQLk-BVuUCFh9auzl"/>
+<div class="min-w-0">
+<h3 class="text-lg font-bold text-on-surface leading-tight truncate">Valentino, Marcus</h3>
+<div class="flex items-center flex-wrap gap-2 text-xs text-on-surface-variant font-label mt-1">
+<span class="bg-primary-fixed px-2 py-0.5 rounded text-on-primary-fixed-variant font-bold">412-B</span>
+<span>남성 / 64세</span>
+<span class="hidden sm:inline">#PT88321</span>
+</div>
+</div>
+</div>
+<!-- Diagnosis -->
+<div class="flex-1 lg:min-w-0">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">진단명</p>
+<p class="text-sm font-semibold text-on-surface lg:truncate">TKR, Left Knee (인공슬관절 전치환술)</p>
+</div>
+<!-- Vitals Grid -->
+<div class="grid grid-cols-3 gap-2 sm:gap-4 lg:w-[260px] bg-surface-container-lowest/50 p-3 rounded-xl shrink-0">
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">혈압</p>
+<p class="text-sm font-black text-on-surface font-label">128/84</p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">맥박</p>
+<p class="text-sm font-black text-primary font-label">72<span class="text-[10px] font-normal ml-0.5">bpm</span></p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">SPO2</p>
+<p class="text-sm font-black text-on-surface font-label">98%</p>
+</div>
+</div>
+<!-- Status & Actions Grouped on desktop -->
+<div class="flex flex-col sm:flex-row items-center gap-4 lg:w-[320px] shrink-0 justify-end">
+<div class="w-full sm:w-auto flex justify-center">
+<span class="px-3 py-1.5 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-container flex items-center gap-1.5 whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    준비 완료
+                                </span>
+</div>
+<div class="flex gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none bg-surface-container-highest text-on-surface-variant px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-slate-200 transition-colors whitespace-nowrap">EMR 조회</button>
+<button class="flex-1 sm:flex-none bg-primary text-white px-3 py-2 rounded-lg text-[11px] font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow">play_arrow</span>
+                                    시작
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Patient Card 2 (In Progress) -->
+<div class="bg-surface-container-low border-l-4 border-primary rounded-2xl p-4 sm:p-5 hover:bg-surface-container transition-colors group">
+<div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
+<div class="flex items-center gap-4 lg:w-[280px] shrink-0">
+<img alt="Patient Avatar" class="w-12 h-12 rounded-full object-cover shrink-0" data-alt="Middle aged female patient headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdrOWLIxsPzp7DGW_NK6ugyTA2o0GXuZrhaGnQbibDlBD7zab7YQ5pqoZRVj2Ipx5jYvuQ3wNdMmh0xrcwEN5qvDXY2EeZLhfoqfL9U1EEtHoepxgwS7_I0_3wSEIRpZhclew547wYlyXt7R1FD7l60ZesO1zAGldwc62h4M4AdSaexM07SvfjXWmNGDkY153QgXN4v6YO2jDVSccFAyYucf1N28zbO3qILpAKYU54Fr_W63GOWC30h1F3wJDtnCO6mOUNMHQidiny"/>
+<div class="min-w-0">
+<h3 class="text-lg font-bold text-on-surface leading-tight truncate">Choi, Min-ah</h3>
+<div class="flex items-center flex-wrap gap-2 text-xs text-on-surface-variant font-label mt-1">
+<span class="bg-primary-fixed px-2 py-0.5 rounded text-on-primary-fixed-variant font-bold">415-A</span>
+<span>여성 / 42세</span>
+<span class="hidden sm:inline">#PT99201</span>
+</div>
+</div>
+</div>
+<div class="flex-1 lg:min-w-0">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">진단명</p>
+<p class="text-sm font-semibold text-on-surface lg:truncate">Pneumonia, Right Lower Lobe (폐렴)</p>
+</div>
+<div class="grid grid-cols-3 gap-2 sm:gap-4 lg:w-[260px] bg-surface-container-lowest/50 p-3 rounded-xl shrink-0">
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">혈압</p>
+<p class="text-sm font-black text-on-surface font-label">110/70</p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">맥박</p>
+<p class="text-sm font-black text-error font-label">104<span class="text-[10px] font-normal ml-0.5">bpm</span></p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">SPO2</p>
+<p class="text-sm font-black text-error font-label">92%</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-4 lg:w-[320px] shrink-0 justify-end">
+<div class="w-full sm:w-auto flex justify-center">
+<span class="px-3 py-1.5 rounded-full text-[11px] font-bold bg-primary-fixed text-on-primary-fixed-variant flex items-center gap-1.5 whitespace-nowrap">
+<span class="material-symbols-outlined text-[14px] animate-pulse" data-icon="mic" style="font-variation-settings: 'FILL' 1;">mic</span>
+                                    진행 중 (STT)
+                                </span>
+</div>
+<div class="flex gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none bg-surface-container-highest text-on-surface-variant px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-slate-200 transition-colors whitespace-nowrap">기록 확인</button>
+<button class="flex-1 sm:flex-none bg-error text-white px-3 py-2 rounded-lg text-[11px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="stop">stop</span>
+                                    종료
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Patient Card 3 (Completed) -->
+<div class="bg-surface-container-low rounded-2xl p-4 sm:p-5 hover:bg-surface-container transition-colors group opacity-75">
+<div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
+<div class="flex items-center gap-4 lg:w-[280px] shrink-0">
+<img alt="Patient Avatar" class="w-12 h-12 rounded-full object-cover shrink-0 grayscale" data-alt="Senior male patient with glasses headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjN9I3oCgiGlUiwMmKy9HY8lvbJcfGQWPYqY0pVCCm1uYMFu47ioLUNqJFp94uNtQrJ0iXczggl4M57JJ7DmRHirWRmzd5Ki_1q5GLlApg-cV-6763fbZ04NQngqJeO3dvepj54oEr1IZBByK6ixXOuz7eDY1ZWXdIH4eIGX1Uuw07crYQSPfQJwlUx20t8rDeHlSa8_cGBpSE0dLzEanLmMNRnArE7m6B3aYs1qexj4a1GV96Dnc92MaVQL6_jct14w_Vw9cGK4dJ"/>
+<div class="min-w-0">
+<h3 class="text-lg font-bold text-on-surface leading-tight truncate">Henderson, James</h3>
+<div class="flex items-center flex-wrap gap-2 text-xs text-on-surface-variant font-label mt-1">
+<span class="bg-surface-dim px-2 py-0.5 rounded text-on-surface-variant font-bold">408-C</span>
+<span>남성 / 78세</span>
+<span class="hidden sm:inline">#PT77642</span>
+</div>
+</div>
+</div>
+<div class="flex-1 lg:min-w-0">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">진단명</p>
+<p class="text-sm font-semibold text-on-surface lg:truncate">CHF, Exacerbation (심부전 악화)</p>
+</div>
+<div class="grid grid-cols-3 gap-2 sm:gap-4 lg:w-[260px] bg-surface-container-lowest/50 p-3 rounded-xl shrink-0">
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">혈압</p>
+<p class="text-sm font-black text-on-surface font-label">135/88</p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">맥박</p>
+<p class="text-sm font-black text-on-surface font-label">88<span class="text-[10px] font-normal ml-0.5">bpm</span></p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">SPO2</p>
+<p class="text-sm font-black text-on-surface font-label">96%</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-4 lg:w-[320px] shrink-0 justify-end">
+<div class="w-full sm:w-auto flex justify-center">
+<span class="px-3 py-1.5 rounded-full text-[11px] font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant flex items-center gap-1.5 whitespace-nowrap">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                    완료됨
+                                </span>
+</div>
+<div class="flex gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none bg-surface-container-highest text-on-surface-variant px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-slate-200 transition-colors whitespace-nowrap">리포트</button>
+<button class="flex-1 sm:flex-none bg-surface-container-highest text-on-surface px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-slate-200 transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+                                    결과
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Patient Card 4 -->
+<div class="bg-surface-container-low rounded-2xl p-4 sm:p-5 hover:bg-surface-container transition-colors group">
+<div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
+<div class="flex items-center gap-4 lg:w-[280px] shrink-0">
+<img alt="Patient Avatar" class="w-12 h-12 rounded-full object-cover shrink-0" data-alt="Young female patient headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLRlnZG9cZwml4S-b2kmgGkHT9kuK7AXP5rCiE0mwOCrMFoeTwYVn7AR6p9Ye3DQ2LFdJf3ezmPGkrS-jWFn7WuXS33hRE6VPtL5gh3O6pYJmPichU50gTLWdRpKE7wwficF7ZfED-LPkT_k1oCoyKu9TmEJnqnKUo3cQW-2p-I54i3E0S2ip0KSeD9vnsbSwVRiFhXoe-iYMhGg0DYkzcI_1bZockGJg8eQaZ9dHP2JNl2fg129agHmFQj9QgbNg95a-uBt1WQWQo"/>
+<div class="min-w-0">
+<h3 class="text-lg font-bold text-on-surface leading-tight truncate">Lee, Ji-young</h3>
+<div class="flex items-center flex-wrap gap-2 text-xs text-on-surface-variant font-label mt-1">
+<span class="bg-primary-fixed px-2 py-0.5 rounded text-on-primary-fixed-variant font-bold">402-A</span>
+<span>여성 / 29세</span>
+<span class="hidden sm:inline">#PT10554</span>
+</div>
+</div>
+</div>
+<div class="flex-1 lg:min-w-0">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">진단명</p>
+<p class="text-sm font-semibold text-on-surface lg:truncate">Appendectomy, Post-op (맹장절제술 후)</p>
+</div>
+<div class="grid grid-cols-3 gap-2 sm:gap-4 lg:w-[260px] bg-surface-container-lowest/50 p-3 rounded-xl shrink-0">
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">혈압</p>
+<p class="text-sm font-black text-on-surface font-label">122/78</p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">맥박</p>
+<p class="text-sm font-black text-on-surface font-label">80<span class="text-[10px] font-normal ml-0.5">bpm</span></p>
+</div>
+<div class="text-center">
+<p class="text-[9px] text-slate-500 font-bold font-label">SPO2</p>
+<p class="text-sm font-black text-on-surface font-label">99%</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-4 lg:w-[320px] shrink-0 justify-end">
+<div class="w-full sm:w-auto flex justify-center">
+<span class="px-3 py-1.5 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-container flex items-center gap-1.5 whitespace-nowrap">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    준비 완료
+                                </span>
+</div>
+<div class="flex gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none bg-surface-container-highest text-on-surface-variant px-3 py-2 rounded-lg text-[11px] font-bold hover:bg-slate-200 transition-colors whitespace-nowrap">EMR 조회</button>
+<button class="flex-1 sm:flex-none bg-primary text-white px-3 py-2 rounded-lg text-[11px] font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow">play_arrow</span>
+                                    시작
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Component (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md rounded-t-3xl shadow-[0_-4px_20px_rgba(0,0,0,0.05)] flex justify-around items-center px-4 py-4">
+<button class="text-slate-500 flex flex-col items-center hover:opacity-90 active:scale-90 transition-all">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-mono text-[9px] uppercase tracking-widest mt-1">대시보드</span>
+</button>
+<button class="bg-gradient-to-br from-blue-700 to-blue-500 text-white rounded-2xl px-5 py-2 flex items-center gap-2 active:scale-90 transition-all shadow-md">
+<span class="material-symbols-outlined text-lg" data-icon="person_search">person_search</span>
+<span class="font-mono text-[9px] uppercase tracking-widest font-bold">명단</span>
+</button>
+<button class="text-slate-500 flex flex-col items-center hover:opacity-90 active:scale-90 transition-all">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-mono text-[9px] uppercase tracking-widest mt-1">학습</span>
+</button>
+</nav>
+</div>
+</body></html>

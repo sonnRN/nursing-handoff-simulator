@@ -128,6 +128,22 @@
     }
   }
 
+  function showToast(message, tone) {
+    const toast = document.getElementById("appToast");
+    if (!toast || !message) return;
+    toast.textContent = message;
+    toast.classList.remove("is-error", "is-success", "show");
+    if (tone === "error") toast.classList.add("is-error");
+    if (tone === "success") toast.classList.add("is-success");
+    window.clearTimeout(showToast.timerId);
+    window.requestAnimationFrame(function show() {
+      toast.classList.add("show");
+    });
+    showToast.timerId = window.setTimeout(function hide() {
+      toast.classList.remove("show");
+    }, 2800);
+  }
+
   function renderStepper() {
     const root = document.getElementById("stepperList");
     if (!root) return;
@@ -146,12 +162,12 @@
     if (!root) return;
     const patient = runtime.scenario.patient;
     root.innerHTML = `
-      <div class="metric-card">
+      <div class="metric-card cc-card">
         <p class="section-label">Patient</p>
         <h3>${patient.name}</h3>
         <p class="muted">${patient.age} ${patient.gender} • ${patient.room}</p>
       </div>
-      <div class="metric-card">
+      <div class="metric-card cc-card">
         <p class="section-label">Current shift</p>
         <strong>${patient.currentShift}</strong>
         <p class="muted">${latestShiftHistory().summary}</p>
@@ -172,20 +188,20 @@
   }
 
   function cardList(title, items) {
-    return `<section class="info-card"><p class="section-label">${title}</p><div class="detail-list">${items.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>`;
+    return `<section class="info-card cc-card"><p class="section-label">${title}</p><div class="detail-list">${items.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>`;
   }
 
   function renderLanding() {
     const root = document.getElementById("landingScenarioCard");
     if (!root) return;
     root.innerHTML = `
-      <section class="info-card">
+      <section class="info-card cc-card">
         <p class="section-label">Case at a glance</p>
         <h3>${runtime.scenario.patient.admissionReason}</h3>
-        <div class="metric-grid">
-          <div class="metric-card"><p class="section-label">Hospital day</p><div class="metric-value">${runtime.scenario.patient.hospitalDay}</div></div>
-          <div class="metric-card"><p class="section-label">Code status</p><div class="metric-value">${runtime.scenario.patient.codeStatus}</div></div>
-          <div class="metric-card"><p class="section-label">Current oxygen</p><div class="metric-value">${currentDay().handover.vent[0].detail}</div></div>
+        <div class="metric-grid cc-grid">
+          <div class="metric-card cc-card"><p class="section-label">Hospital day</p><div class="metric-value">${runtime.scenario.patient.hospitalDay}</div></div>
+          <div class="metric-card cc-card"><p class="section-label">Code status</p><div class="metric-value">${runtime.scenario.patient.codeStatus}</div></div>
+          <div class="metric-card cc-card"><p class="section-label">Current oxygen</p><div class="metric-value">${currentDay().handover.vent[0].detail}</div></div>
         </div>
       </section>
     `;
@@ -201,11 +217,11 @@
         <p class="section-label">Case overview</p>
         <h3>${patient.name}</h3>
         <p class="muted">${patient.admissionReason}</p>
-        <div class="key-value-grid">
-          <div class="mini-card"><p class="section-label">Room</p><strong>${patient.room}</strong></div>
-          <div class="mini-card"><p class="section-label">MRN</p><strong>${patient.mrn}</strong></div>
-          <div class="mini-card"><p class="section-label">Allergies</p><strong>${patient.allergies.join(", ")}</strong></div>
-          <div class="mini-card"><p class="section-label">Service</p><strong>${patient.admittingService}</strong></div>
+        <div class="key-value-grid cc-grid">
+          <div class="mini-card cc-card"><p class="section-label">Room</p><strong>${patient.room}</strong></div>
+          <div class="mini-card cc-card"><p class="section-label">MRN</p><strong>${patient.mrn}</strong></div>
+          <div class="mini-card cc-card"><p class="section-label">Allergies</p><strong>${patient.allergies.join(", ")}</strong></div>
+          <div class="mini-card cc-card"><p class="section-label">Service</p><strong>${patient.admittingService}</strong></div>
         </div>
       `;
     }
@@ -221,7 +237,7 @@
       briefingShiftHistory.innerHTML = `
         <p class="section-label">Multi-day history</p>
         ${runtime.scenario.shiftHistory.map(function toShift(shift) {
-          return `<div class="thread-card ai"><strong>${shift.label}</strong><p class="muted">${shift.summary}</p></div>`;
+          return `<div class="thread-card cc-card ai"><strong>${shift.label}</strong><p class="muted">${shift.summary}</p></div>`;
         }).join("")}
       `;
     }
@@ -257,17 +273,17 @@
     if (!root) return;
     if (runtime.state.emrTab === "overview") {
       root.innerHTML = `
-        <div class="cards-grid">
+        <div class="cards-grid cc-grid">
           ${cardList("Current priorities", [day.nursingProblem, day.providerUpdate].concat(day.plan))}
           ${cardList("Safety risks", day.safetyRisks)}
           ${cardList("Pending tasks", day.pendingTasks)}
           ${cardList("Provider updates", day.specials)}
         </div>
-        <div class="metric-grid">
-          <div class="metric-card"><p class="section-label">Vitals</p><div class="metric-value">${day.vital.bp}</div><p class="muted">HR ${day.vital.hr} • RR ${day.vital.rr} • Temp ${day.vital.bt} • SpO2 ${day.vital.spo2}%</p></div>
-          <div class="metric-card"><p class="section-label">I/O</p><div class="metric-value">${day.io.net}</div><p class="muted">In ${day.io.input} • Out ${day.io.totalOutput}</p></div>
-          <div class="metric-card"><p class="section-label">Activity</p><div class="metric-value-soft">${day.activity}</div></div>
-          <div class="metric-card"><p class="section-label">Devices</p><div class="metric-value-soft">${day.handover.vent[0].detail}</div></div>
+        <div class="metric-grid cc-grid">
+          <div class="metric-card cc-card"><p class="section-label">Vitals</p><div class="metric-value">${day.vital.bp}</div><p class="muted">HR ${day.vital.hr} • RR ${day.vital.rr} • Temp ${day.vital.bt} • SpO2 ${day.vital.spo2}%</p></div>
+          <div class="metric-card cc-card"><p class="section-label">I/O</p><div class="metric-value">${day.io.net}</div><p class="muted">In ${day.io.input} • Out ${day.io.totalOutput}</p></div>
+          <div class="metric-card cc-card"><p class="section-label">Activity</p><div class="metric-value-soft">${day.activity}</div></div>
+          <div class="metric-card cc-card"><p class="section-label">Devices</p><div class="metric-value-soft">${day.handover.vent[0].detail}</div></div>
         </div>
       `;
       return;
@@ -276,7 +292,7 @@
     if (runtime.state.emrTab === "trends") {
       const dates = window.HANDOFF_SIM_DATA.getTimelineDates();
       root.innerHTML = `
-        <div class="cards-grid">
+        <div class="cards-grid cc-grid">
           ${cardList("Vital trend", dates.map(function toRow(date) {
             const item = runtime.scenario.patient.dailyData[date];
             return `${date}: BP ${item.vital.bp}, HR ${item.vital.hr}, RR ${item.vital.rr}, Temp ${item.vital.bt}, SpO2 ${item.vital.spo2}%`;
@@ -296,7 +312,7 @@
 
     if (runtime.state.emrTab === "meds") {
       root.innerHTML = `
-        <div class="cards-grid">
+        <div class="cards-grid cc-grid">
           ${cardList("Active IV / procedural medications", day.orders.inj)}
           ${cardList("Active oral medications", day.orders.po)}
           ${cardList("Medication changes", day.medicationChanges)}
@@ -308,7 +324,7 @@
 
     if (runtime.state.emrTab === "notes") {
       root.innerHTML = `
-        <div class="cards-grid">
+        <div class="cards-grid cc-grid">
           ${cardList("Nursing notes", day.nursingNotes)}
           ${cardList("Overnight events", day.overnightEvents)}
           ${cardList("Orders to follow through", day.docOrders.routine.concat(day.docOrders.prn))}
@@ -318,7 +334,7 @@
     }
 
     root.innerHTML = `
-      <div class="cards-grid">
+      <div class="cards-grid cc-grid">
         ${cardList("Shift-to-shift history", runtime.scenario.shiftHistory.map(function toHistory(item) { return `${item.label}: ${item.summary}`; }))}
         ${cardList("Baseline history", runtime.scenario.patient.baselineHistory)}
         ${cardList("Handoff focus checklist", runtime.scenario.currentFocusChecklist)}
@@ -337,7 +353,7 @@
       analysisSummary = `${day.providerUpdate} Next tasks: ${day.pendingTasks.slice(0, 2).join("; ")}.`;
     }
     root.innerHTML = `
-      <section class="info-card">
+      <section class="info-card cc-card">
         <p class="section-label">Current chart focus</p>
         <div class="detail-list">
           <p>Code status: ${runtime.scenario.patient.codeStatus}</p>
@@ -346,7 +362,7 @@
           <p>Repeat labs: ${day.pendingTasks[0]}</p>
         </div>
       </section>
-      <section class="info-card">
+      <section class="info-card cc-card">
         <p class="section-label">Engine summary</p>
         <p class="muted">${analysisSummary}</p>
       </section>
@@ -404,15 +420,15 @@
     if (thread) {
       const cards = [];
       if (runtime.state.followUp.opening) {
-        cards.push(`<div class="thread-card ai"><strong>${runtime.scenario.receiverName}</strong><p class="muted">${runtime.state.followUp.opening}</p></div>`);
+        cards.push(`<div class="thread-card cc-card ai"><strong>${runtime.scenario.receiverName}</strong><p class="muted">${runtime.state.followUp.opening}</p></div>`);
       }
       runtime.state.followUp.questions.forEach(function eachQuestion(question, index) {
-        cards.push(`<div class="thread-card ai"><strong>Question ${index + 1}</strong><p>${question.question}</p></div>`);
+        cards.push(`<div class="thread-card cc-card ai"><strong>Question ${index + 1}</strong><p>${question.question}</p></div>`);
         if (runtime.state.followUp.answers[index]) {
-          cards.push(`<div class="thread-card user"><strong>Your answer</strong><p>${runtime.state.followUp.answers[index].answer}</p></div>`);
+          cards.push(`<div class="thread-card cc-card user"><strong>Your answer</strong><p>${runtime.state.followUp.answers[index].answer}</p></div>`);
         }
       });
-      thread.innerHTML = cards.join("") || `<div class="thread-card ai"><p class="muted">Submit the transcript to generate focused receiver questions.</p></div>`;
+      thread.innerHTML = cards.join("") || `<div class="thread-card cc-card ai"><p class="muted">Submit the transcript to generate focused receiver questions.</p></div>`;
     }
     if (promptCard) {
       const nextQuestion = runtime.state.followUp.questions[runtime.state.followUp.answers.length];
@@ -434,8 +450,8 @@
           secondaryLabel: "Load Demo Answer",
           showSecondary: runtime.config.qaMode
         })}
-        <textarea class="answer-input" id="followupAnswerInput" placeholder="Type or refine your answer here.">${runtime.state.answerDraft}</textarea>
-        <div class="stack-row"><button class="btn btn-primary" data-action="submit-followup-answer">Save Answer</button></div>
+        <textarea class="answer-input cc-textarea" id="followupAnswerInput" placeholder="Type or refine your answer here.">${runtime.state.answerDraft}</textarea>
+        <div class="stack-row"><button class="cc-btn cc-btn--primary" data-action="submit-followup-answer">Save Answer</button></div>
       ` : `<p class="muted">No more questions pending.</p>`;
     }
   }
@@ -444,34 +460,34 @@
     const root = document.getElementById("feedbackContent");
     if (!root) return;
     if (!runtime.state.feedback) {
-      root.innerHTML = `<div class="info-card"><p class="muted">Final feedback will appear here after the follow-up exchange.</p></div>`;
+      root.innerHTML = `<div class="info-card cc-card"><p class="muted">Final feedback will appear here after the follow-up exchange.</p></div>`;
       return;
     }
     const feedback = runtime.state.feedback;
     root.innerHTML = `
       <div class="score-hero">
-        <section class="info-card">
+        <section class="info-card cc-card">
           <div class="score-ring"><strong>${feedback.overallScore}</strong></div>
           <p class="section-label">Overall score</p>
         </section>
-        <section class="info-card">
+        <section class="info-card cc-card">
           <p class="section-label">Category scores</p>
-          <div class="metric-grid">
+          <div class="metric-grid cc-grid">
             ${Object.keys(feedback.categoryScores).map(function toScore(key) {
-              return `<div class="metric-card"><p class="section-label">${key}</p><div class="metric-value">${feedback.categoryScores[key]}</div></div>`;
+              return `<div class="metric-card cc-card"><p class="section-label">${key}</p><div class="metric-value">${feedback.categoryScores[key]}</div></div>`;
             }).join("")}
           </div>
         </section>
       </div>
-      <div class="feedback-grid">
-        <section class="feedback-card"><p class="section-label">Strengths</p><div class="detail-list">${feedback.strengths.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>
-        <section class="feedback-card"><p class="section-label">Missing information</p><div class="detail-list">${feedback.missingInformation.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>
-        <section class="feedback-card"><p class="section-label">Critical omissions</p><div class="detail-list">${feedback.criticalOmissions.map(function toItem(item) { return `<p>${item}</p>`; }).join("") || "<p>None after follow-up.</p>"}</div></section>
-        <section class="feedback-card"><p class="section-label">Safety issues missed</p><div class="detail-list">${feedback.safetyIssuesMissed.map(function toItem(item) { return `<p>${item}</p>`; }).join("") || "<p>No major safety miss identified.</p>"}</div></section>
-        <section class="feedback-card"><p class="section-label">Prioritization problems</p><div class="detail-list">${feedback.prioritizationProblems.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>
-        <section class="feedback-card"><p class="section-label">Communication clarity</p><p class="muted">${feedback.communicationClarity}</p><p class="section-label">Clinical organization</p><p class="muted">${feedback.clinicalOrganization}</p></section>
+      <div class="feedback-grid cc-grid">
+        <section class="feedback-card cc-card"><p class="section-label">Strengths</p><div class="detail-list">${feedback.strengths.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>
+        <section class="feedback-card cc-card"><p class="section-label">Missing information</p><div class="detail-list">${feedback.missingInformation.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>
+        <section class="feedback-card cc-card"><p class="section-label">Critical omissions</p><div class="detail-list">${feedback.criticalOmissions.map(function toItem(item) { return `<p>${item}</p>`; }).join("") || "<p>None after follow-up.</p>"}</div></section>
+        <section class="feedback-card cc-card"><p class="section-label">Safety issues missed</p><div class="detail-list">${feedback.safetyIssuesMissed.map(function toItem(item) { return `<p>${item}</p>`; }).join("") || "<p>No major safety miss identified.</p>"}</div></section>
+        <section class="feedback-card cc-card"><p class="section-label">Prioritization problems</p><div class="detail-list">${feedback.prioritizationProblems.map(function toItem(item) { return `<p>${item}</p>`; }).join("")}</div></section>
+        <section class="feedback-card cc-card"><p class="section-label">Communication clarity</p><p class="muted">${feedback.communicationClarity}</p><p class="section-label">Clinical organization</p><p class="muted">${feedback.clinicalOrganization}</p></section>
       </div>
-      <section class="info-card">
+      <section class="info-card cc-card">
         <p class="section-label">Suggested improved handoff</p>
         <p class="muted">${feedback.improvedHandoff}</p>
       </section>
@@ -482,12 +498,13 @@
     return `
       <p class="section-label">${config.title}</p>
       <div class="status-pill">${config.status}</div>
+      ${config.status === "processing" ? `<div class="cc-spinner" aria-hidden="true"></div>` : ""}
       <div class="recorder-visual">${Array.from({ length: 10 }, function createBar() { return "<span></span>"; }).join("")}</div>
       <p class="muted">${config.message}</p>
-      ${config.transcriptPreview ? `<div class="thread-card user"><strong>Transcript preview</strong><p>${config.transcriptPreview}</p></div>` : ""}
+      ${config.transcriptPreview ? `<div class="thread-card cc-card user"><strong>Transcript preview</strong><p>${config.transcriptPreview}</p></div>` : ""}
       <div class="stack-row">
-        <button class="btn btn-primary" data-action="${config.primaryAction}">${config.primaryLabel}</button>
-        ${config.showSecondary ? `<button class="btn btn-secondary" data-action="${config.secondaryAction}">${config.secondaryLabel}</button>` : ""}
+        <button class="cc-btn cc-btn--primary" data-action="${config.primaryAction}">${config.primaryLabel}</button>
+        ${config.showSecondary ? `<button class="cc-btn" data-action="${config.secondaryAction}">${config.secondaryLabel}</button>` : ""}
       </div>
     `;
   }
@@ -531,6 +548,7 @@
       runtime.state.handoffTranscript = runtime.scenario.demo.initialTranscript;
       runtime.state.recordingStatus = "ready";
       runtime.state.recordingMessage = "Demo transcript loaded.";
+      showToast("Demo transcript loaded.", "success");
       setStep("confirm");
     }
     if (action === "start-followup") createFollowUp();
@@ -581,6 +599,7 @@
       if (runtime.media.recognition) runtime.media.recognition.stop();
       runtime.state.recordingStatus = "ready";
       runtime.state.recordingMessage = "Microphone unavailable. Type or load a demo transcript instead.";
+      showToast("Microphone unavailable. Falling back to manual entry.", "error");
       renderApp();
     }
   }
@@ -610,16 +629,23 @@
     }
 
     const base64Audio = audioBlob ? await blobToDataUrl(audioBlob) : "";
-    const payload = await postSimulationAction("transcribe", {
-      audioBase64: base64Audio,
-      mimeType: audioBlob && audioBlob.type,
-      fileName: runtime.media.mode === "handoff" ? "handoff.webm" : "followup.webm",
-      browserTranscript: runtime.media.browserTranscript
-    });
-    const transcript = payload && payload.transcript ? payload.transcript : runtime.media.browserTranscript;
+    let transcript = runtime.media.browserTranscript;
+    try {
+      const payload = await postSimulationAction("transcribe", {
+        audioBase64: base64Audio,
+        mimeType: audioBlob && audioBlob.type,
+        fileName: runtime.media.mode === "handoff" ? "handoff.webm" : "followup.webm",
+        browserTranscript: runtime.media.browserTranscript
+      });
+      transcript = payload && payload.transcript ? payload.transcript : runtime.media.browserTranscript;
+    } catch (error) {
+      console.error(error);
+      showToast("Server transcription failed. Using browser or manual fallback.", "error");
+    }
 
     runtime.state.recordingStatus = "ready";
     runtime.state.recordingMessage = transcript ? "Transcript ready. Review before submitting." : "No transcript captured. Type manually if needed.";
+    showToast(transcript ? "Transcript ready for review." : "No transcript captured. Manual edit required.", transcript ? "success" : "error");
     if (runtime.media.mode === "handoff") {
       runtime.state.handoffTranscript = transcript;
       setStep("confirm");
@@ -638,14 +664,20 @@
   }
 
   async function createFollowUp() {
-    const payload = await postSimulationAction("followup", {
-      transcript: runtime.state.handoffTranscript
-    });
-    runtime.state.followUp.opening = payload.opening || "";
-    runtime.state.followUp.questions = payload.questions || [];
-    runtime.state.followUp.answers = [];
-    runtime.state.answerDraft = "";
-    setStep("followup");
+    try {
+      const payload = await postSimulationAction("followup", {
+        transcript: runtime.state.handoffTranscript
+      });
+      runtime.state.followUp.opening = payload.opening || "";
+      runtime.state.followUp.questions = payload.questions || [];
+      runtime.state.followUp.answers = [];
+      runtime.state.answerDraft = "";
+      showToast("Receiver follow-up questions are ready.", "success");
+      setStep("followup");
+    } catch (error) {
+      console.error(error);
+      showToast("Unable to generate follow-up questions right now.", "error");
+    }
   }
 
   function saveFollowUpAnswer() {
@@ -659,6 +691,7 @@
     runtime.state.answerDraft = "";
     runtime.state.recordingStatus = "idle";
     runtime.state.recordingMessage = "Ready for the next answer.";
+    showToast("Follow-up answer saved.", "success");
     renderApp();
   }
 
@@ -670,12 +703,18 @@
   }
 
   async function createFeedback() {
-    const payload = await postSimulationAction("feedback", {
-      transcript: runtime.state.handoffTranscript,
-      followUpResponses: runtime.state.followUp.answers
-    });
-    runtime.state.feedback = payload;
-    setStep("feedback");
+    try {
+      const payload = await postSimulationAction("feedback", {
+        transcript: runtime.state.handoffTranscript,
+        followUpResponses: runtime.state.followUp.answers
+      });
+      runtime.state.feedback = payload;
+      showToast("Structured feedback generated.", "success");
+      setStep("feedback");
+    } catch (error) {
+      console.error(error);
+      showToast("Unable to generate feedback right now.", "error");
+    }
   }
 
   async function postSimulationAction(action, extraPayload) {

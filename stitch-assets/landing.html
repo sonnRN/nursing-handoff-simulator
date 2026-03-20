@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#005EB8",
+              "primary-variant": "#00478d",
+              "surface": "#ffffff",
+              "surface-variant": "#f8fafc",
+              "on-surface": "#1e293b",
+              "on-surface-variant": "#64748b",
+              "outline": "#e2e8f0",
+              "success": "#10b981"
+            },
+            fontFamily: {
+              "headline": ["Inter", "sans-serif"],
+              "body": ["Inter", "sans-serif"],
+              "label": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.375rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .brand-border {
+        border-bottom: 2px solid transparent;
+        transition: border-color 0.2s;
+      }
+      .brand-border:hover {
+        border-color: #005EB8;
+      }
+      .clinical-shadow {
+        box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/10 selection:text-primary">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-white border-b border-outline">
+<div class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+<div class="text-xl font-bold tracking-tight text-primary">
+                Digital Clinician
+            </div>
+<div class="hidden md:flex items-center gap-8 text-sm font-semibold text-on-surface-variant">
+<a class="text-primary brand-border border-primary pb-1" href="#">대시보드</a>
+<a class="hover:text-primary transition-colors" href="#">환자 명단</a>
+<a class="hover:text-primary transition-colors" href="#">시뮬레이션 교육</a>
+<a class="hover:text-primary transition-colors" href="#">학습 기록</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-surface-variant border border-outline rounded-md px-3 py-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg mr-2">search</span>
+<span class="text-xs">환자 기록 검색...</span>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary p-1.5 transition-all">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary p-1.5 transition-all">account_circle</button>
+<button class="bg-primary text-white px-5 py-2 rounded-md text-sm font-bold hover:bg-primary-variant transition-all">
+                    교육 시작하기
+                </button>
+</div>
+</div>
+</nav>
+<main class="pt-16">
+<!-- Section 1: Hero Section -->
+<section class="py-20 lg:py-32 px-6 bg-surface-variant overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="z-10">
+<div class="inline-flex items-center text-primary text-xs font-bold tracking-widest uppercase mb-4 border-b-2 border-primary pb-1">
+                        AI 간호 교육 플랫폼
+                    </div>
+<h1 class="text-4xl lg:text-5xl font-bold tracking-tight text-on-surface leading-tight mb-6">
+                        임상 실무의 전문성,<br/>
+<span class="text-primary">디지털 시뮬레이션</span>으로 완성하십시오.
+                    </h1>
+<p class="text-lg text-on-surface-variant mb-10 max-w-lg leading-relaxed">
+                        실제 EMR 데이터와 고도화된 음성 인식 기술이 결합된 맞춤형 교육 환경. 
+                        안전한 디지털 환경에서 의료 현장의 실질적인 역량을 강화하세요.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-white px-8 py-4 rounded-md font-bold text-base hover:bg-primary-variant transition-all shadow-lg shadow-primary/10">
+                            지금 시작하기
+                        </button>
+<button class="bg-white border border-outline text-on-surface px-8 py-4 rounded-md font-bold text-base hover:bg-surface-variant transition-all">
+                            서비스 문의
+                        </button>
+</div>
+</div>
+<div class="relative">
+<div class="relative rounded-2xl overflow-hidden clinical-shadow border border-outline bg-white">
+<img alt="Professional nurse using digital clinical simulation tools" class="w-full h-[500px] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz0gZ_-vzwZAoV4W7xuyWOCwHG80z-Q7b6QA01aapbstpePV6tPQfn4_3WdMmtVa35zrR_VVNBhQMHVF4pTJdnl7D0jPNoOft0r6uYMJGMizs8cbFW2yixjLOYenXnW9xKcJSn6R6jWKpb1IAfPFi-HhXOaOXrvn4DBVZKlLRYW61MtNeamC1o6W82ICiIisM1ReWhPFHWSq-swzX-eGJ_FRFOuh5yLqBaU7s7T_FnvcObCN3yOMyIIwmk2VzRL0L4RlWGuD5oY_OB"/>
+<!-- UI Overlay Element -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent pointer-events-none"></div>
+<div class="absolute top-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-xl border border-white/20 shadow-xl max-w-[200px]">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-2 h-2 rounded-full bg-success animate-pulse"></div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">AI Simulation Active</span>
+</div>
+<div class="space-y-2">
+<div class="h-1.5 w-full bg-primary/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[75%]"></div>
+</div>
+<div class="h-1.5 w-full bg-primary/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[40%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Trust Badge -->
+<div class="absolute -bottom-6 -left-6 bg-white p-5 rounded-lg clinical-shadow border border-outline max-w-xs hidden sm:block z-20">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Clinical Accuracy</p>
+<p class="text-sm font-bold">임상 가이드라인 100% 준수</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Trust & Partners (New) -->
+<section class="py-12 border-y border-outline bg-white px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 opacity-60">
+<span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">함께하는 파트너</span>
+<div class="flex flex-wrap justify-center gap-12 grayscale">
+<div class="text-xl font-bold">HOSPITAL A</div>
+<div class="text-xl font-bold">UNIVERSITY B</div>
+<div class="text-xl font-bold">MEDICAL CENTER C</div>
+<div class="text-xl font-bold">HEALTH TECH D</div>
+</div>
+</div>
+</section>
+<!-- Section 2: How It Works -->
+<section class="py-24 px-6 bg-surface">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="text-3xl font-bold text-on-surface mb-4">인수인계 교육 프로세스</h2>
+<div class="w-12 h-1 bg-primary mx-auto mb-6"></div>
+<p class="text-on-surface-variant max-w-2xl mx-auto">체계적인 3단계 학습 프로세스를 통해 임상 현장과 동일한 수준의 인수인계 역량을 배양합니다.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-outline rounded-xl overflow-hidden shadow-sm">
+<!-- Step 1 -->
+<div class="p-10 bg-white border-r border-outline last:border-r-0 hover:bg-surface-variant transition-colors">
+<div class="text-primary font-bold text-lg mb-6">01</div>
+<span class="material-symbols-outlined text-4xl text-primary mb-6">description</span>
+<h3 class="text-xl font-bold mb-4">EMR 데이터 분석</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                            환자 차트를 바탕으로 주요 증상, 과거력, 검사 결과 등 핵심 정보를 체계적으로 파악하고 분석합니다.
+                        </p>
+</div>
+<!-- Step 2 -->
+<div class="p-10 bg-white border-r border-outline last:border-r-0 hover:bg-surface-variant transition-colors">
+<div class="text-primary font-bold text-lg mb-6">02</div>
+<span class="material-symbols-outlined text-4xl text-primary mb-6">mic_external_on</span>
+<h3 class="text-xl font-bold mb-4">음성 기반 SBAR 수행</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                            AI 음성 인식 기술을 통해 Situation, Background, Assessment, Recommendation 순서로 실시간 구두 인수인계를 연습합니다.
+                        </p>
+</div>
+<!-- Step 3 -->
+<div class="p-10 bg-white border-r border-outline last:border-r-0 hover:bg-surface-variant transition-colors">
+<div class="text-primary font-bold text-lg mb-6">03</div>
+<span class="material-symbols-outlined text-4xl text-primary mb-6">assignment_turned_in</span>
+<h3 class="text-xl font-bold mb-4">정밀 피드백 리포트</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                            임상 가이드라인 준수율, 누락 정보, 언어적 숙련도에 대한 정량적 분석 결과를 즉시 확인합니다.
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Key Features -->
+<section class="py-24 px-6 bg-surface-variant">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16">
+<h2 class="text-3xl font-bold text-on-surface mb-4">핵심 기능</h2>
+<p class="text-on-surface-variant">디지털 클리니션의 정교한 기술력이 실무와 교육 사이의 간극을 최소화합니다.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Feature 1 -->
+<div class="lg:col-span-2 bg-white rounded-xl border border-outline p-10 flex flex-col md:flex-row gap-10 items-center clinical-shadow">
+<div class="flex-1">
+<span class="material-symbols-outlined text-primary text-3xl mb-6">monitoring</span>
+<h3 class="text-2xl font-bold mb-4">지능형 학습 관리 시스템</h3>
+<p class="text-on-surface-variant mb-6 leading-relaxed text-sm">
+                                개인별 학습 진도와 성취도를 데이터 기반으로 시각화합니다. 
+                                AI가 분석한 취약 상황별 맞춤 교육 커리큘럼을 자동으로 제안합니다.
+                            </p>
+<ul class="space-y-3">
+<li class="flex items-center gap-2 text-sm font-medium text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg">check</span> 실시간 학습 대시보드
+                                </li>
+<li class="flex items-center gap-2 text-sm font-medium text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg">check</span> 개인별 취약점 집중 학습
+                                </li>
+</ul>
+</div>
+<div class="flex-1 w-full bg-surface-variant rounded-lg p-4 border border-outline">
+<img alt="Dashboard UI" class="w-full rounded shadow-sm border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc7bdFyIpQHoFdT8Sm4NESvDyhDEcd0JK-I7tqMiPQykHv_i6NdUjpYD4w1i2Kgc3HFzMPiyBtb1wbyRnHxbOhlEtj03dssszs7PgX4Nk03E2n1cFuCuJE-qYnU6qXSFtxxfvX-zhE0kACKf9yxLIRlC8QAZ2Rr01_ATfD6zn6FYjcWzkVFX7FNoz9D_wcqOSnBtThpCLUe7MQ_z8JZ8aV8v7SbWchhCSB5RGyGtHMlyMPttl55WrXu4OaijGURJriQ8YMNYj6GmCo"/>
+</div>
+</div>
+<!-- Feature 2: STT Panel -->
+<div class="bg-primary text-white rounded-xl p-10 flex flex-col shadow-xl">
+<div class="flex items-center justify-between mb-8">
+<span class="material-symbols-outlined text-3xl">record_voice_over</span>
+<div class="px-2 py-1 bg-white/10 rounded text-[10px] font-bold uppercase tracking-wider border border-white/20">Active STT</div>
+</div>
+<h3 class="text-2xl font-bold mb-4">음성 분석 시뮬레이터</h3>
+<p class="text-white/80 leading-relaxed text-sm mb-10">
+                            지연 시간 0.2초 미만의 실시간 음성-텍스트 변환(STT) 기술로 중단 없는 교육 몰입감을 제공합니다.
+                        </p>
+<div class="mt-auto bg-black/20 rounded-lg p-4 font-mono text-xs border border-white/10">
+<div class="flex items-center gap-2 mb-2 text-white/40">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+                                System status: Optimized
+                            </div>
+<div class="text-white/90">"환자분은 현재 호흡 곤란을 호소하고 계시며..."</div>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="lg:col-span-3 bg-white rounded-xl border border-outline p-10 flex flex-col md:flex-row gap-12 items-center clinical-shadow">
+<div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="bg-surface-variant p-6 rounded-lg border border-outline">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">SBAR 분석 결과</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-primary">A+</span>
+<span class="text-xs text-on-surface-variant">정확도 98%</span>
+</div>
+</div>
+<div class="bg-surface-variant p-6 rounded-lg border border-outline">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">소요 시간</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold text-on-surface">02:45</span>
+<span class="text-xs text-on-surface-variant">평균 -15s</span>
+</div>
+</div>
+</div>
+<div class="flex-[1.5]">
+<h3 class="text-2xl font-bold mb-4">정밀 SBAR 평가 엔진</h3>
+<p class="text-on-surface-variant leading-relaxed text-sm mb-6">
+                                단순 연습을 넘어, 의료 가이드라인 준수 여부를 입체적으로 평가합니다. 
+                                S(상황), B(배경), A(평가), R(권고) 각 단계별 상세 점수와 피드백을 통해 객관적인 성장을 지원합니다.
+                            </p>
+<a class="inline-flex items-center gap-2 font-bold text-primary text-sm hover:underline" href="#">
+                                평가 기준 자세히 보기 <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: CTA -->
+<section class="py-24 px-6 bg-white">
+<div class="max-w-5xl mx-auto bg-primary rounded-2xl p-12 lg:p-20 text-center relative overflow-hidden">
+<div class="relative z-10">
+<h2 class="text-3xl lg:text-4xl font-bold text-white mb-8 leading-tight">
+                        차세대 의료 교육의 표준,<br/>Digital Clinician과 함께 시작하십시오.
+                    </h2>
+<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+<button class="bg-white text-primary px-10 py-4 rounded-md font-bold text-lg hover:bg-surface-variant transition-all w-full sm:w-auto">
+                            무료 데모 신청
+                        </button>
+<button class="bg-transparent border border-white/30 text-white px-10 py-4 rounded-md font-bold text-lg hover:bg-white/10 transition-all w-full sm:w-auto">
+                            도입 문의하기
+                        </button>
+</div>
+<p class="text-white/60 mt-8 text-xs">전국 주요 대학 병원 및 간호 대학 교육 솔루션 적용 중</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full py-16 bg-white border-t border-outline">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
+<div>
+<div class="text-xl font-bold text-primary mb-4">Digital Clinician</div>
+<p class="text-sm text-on-surface-variant max-w-sm leading-relaxed">
+                        의료 시뮬레이션 기술을 통해 전문 의료 인력 양성에 기여하며,<br/>환자 안전과 의료 질 향상을 목표로 합니다.
+                    </p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-12">
+<div>
+<h4 class="text-xs font-bold text-on-surface uppercase tracking-widest mb-6">제품</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary" href="#">시뮬레이션 교육</a></li>
+<li><a class="hover:text-primary" href="#">학습 관리 (LMS)</a></li>
+<li><a class="hover:text-primary" href="#">도입 안내</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-xs font-bold text-on-surface uppercase tracking-widest mb-6">회사</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary" href="#">소개</a></li>
+<li><a class="hover:text-primary" href="#">공지사항</a></li>
+<li><a class="hover:text-primary" href="#">채용</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-xs font-bold text-on-surface uppercase tracking-widest mb-6">고객지원</h4>
+<ul class="space-y-4 text-sm text-on-surface-variant">
+<li><a class="hover:text-primary" href="#">헬프센터</a></li>
+<li><a class="hover:text-primary" href="#">개인정보처리방침</a></li>
+<li><a class="hover:text-primary" href="#">이용약관</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-outline flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">
+<div>© 2024 Digital Clinician. All Rights Reserved.</div>
+<div class="flex gap-6">
+<a href="#">LinkedIn</a>
+<a href="#">Facebook</a>
+<a href="#">Contact Us</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

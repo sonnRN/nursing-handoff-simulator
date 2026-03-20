@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-container": "#77f4e8",
+              "error-container": "#ffdad6",
+              "surface-variant": "#dee3eb",
+              "on-primary-container": "#c8daff",
+              "on-secondary-container": "#006f68",
+              "on-primary-fixed": "#001b3d",
+              "on-error-container": "#93000a",
+              "outline-variant": "#c2c6d4",
+              "on-secondary-fixed": "#00201d",
+              "on-primary-fixed-variant": "#00468c",
+              "primary-fixed-dim": "#a9c7ff",
+              "inverse-surface": "#2c3137",
+              "surface-tint": "#005db6",
+              "on-tertiary-container": "#95eda4",
+              "secondary-fixed": "#7af6eb",
+              "outline": "#727783",
+              "surface-container-low": "#f0f4fc",
+              "primary-container": "#005eb8",
+              "secondary": "#006a63",
+              "on-tertiary": "#ffffff",
+              "surface-container-highest": "#dee3eb",
+              "on-background": "#171c22",
+              "on-tertiary-fixed": "#00210a",
+              "tertiary-fixed": "#9df6ac",
+              "tertiary-fixed-dim": "#82da92",
+              "error": "#ba1a1a",
+              "primary": "#00478d",
+              "on-surface-variant": "#424752",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#d6dae2",
+              "surface-container-high": "#e4e8f0",
+              "primary-fixed": "#d6e3ff",
+              "inverse-primary": "#a9c7ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#5bdacf",
+              "on-secondary-fixed-variant": "#00504b",
+              "tertiary": "#005324",
+              "surface": "#f7f9ff",
+              "on-tertiary-fixed-variant": "#005323",
+              "background": "#f7f9ff",
+              "tertiary-container": "#0b6e33",
+              "on-surface": "#171c22",
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#edf1f9",
+              "surface-container": "#eaeef6",
+              "surface-bright": "#f7f9ff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Plus Jakarta Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        background-color: #f7f9ff;
+        color: #171c22;
+        font-family: 'Inter', sans-serif;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+      }
+      .signature-gradient {
+        background: linear-gradient(135deg, #00478d 0%, #005eb8 100%);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#f7f9ff] border-b border-outline-variant/30">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-[#00478d] font-headline tracking-tight">병동 대시보드</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-[#00478d] border-b-2 border-[#00478d] pb-1 font-bold transition-colors" href="#">전체 현황</a>
+<a class="text-slate-500 font-medium hover:text-[#005eb8] transition-colors" href="#">환자 리스트</a>
+<a class="text-slate-500 font-medium hover:text-[#005eb8] transition-colors" href="#">시뮬레이션 교육</a>
+<a class="text-slate-500 font-medium hover:text-[#005eb8] transition-colors" href="#">학습 기록</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-surface-container-high px-4 py-1.5 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 placeholder-on-surface-variant" placeholder="환자 검색..." type="text"/>
+</div>
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest">
+<img alt="간호사 프로필" class="w-full h-full object-cover" data-alt="Healthcare professional avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHKt0e4f57OldqGqZTT4DBKJndm7QME7XKhrKkWvY1Zejxb0LtHVDH3ozIHTzq7_vbp2nTdbFAOEiJ0Kz6cPWAnfi4p-koRa6PdAqpdcMRAZluD5dZhXlKGZOWhhoF6yuysjPs4u54LMvU8NQFrxM_hVb2n_79BoxFWYKukBSnUbmxorU8RZQq_hSNxvQbM0BKX5l3vqgcvsR6Rl9A8IuO5EhhsoJ_tWJ2u-BYZmhlDzzmY9cxV86BXdXkWPT5AIQZ_VzJ_YeGWqkQ"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#f0f4fc] flex flex-col py-6 z-40 border-r border-outline-variant/20">
+<div class="px-6 mb-8 pt-16">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl signature-gradient flex items-center justify-center text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined" data-icon="local_hospital" data-weight="fill" style="font-variation-settings: 'FILL' 1;">local_hospital</span>
+</div>
+<div>
+<h2 class="text-sm font-bold text-[#171c22] font-headline leading-tight">제4병동</h2>
+<p class="text-[10px] text-slate-500 font-label">급성기 간호 (정형외과)</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 py-3 px-4 mx-2 bg-[#ffffff] text-[#00478d] rounded-lg shadow-sm font-bold transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-headline text-sm">대시보드</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-slate-600 hover:bg-white/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-headline text-sm">환자 리스트</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-slate-600 hover:bg-white/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="model_training">model_training</span>
+<span class="font-headline text-sm">시뮬레이션 교육</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-slate-600 hover:bg-white/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-headline text-sm">학습 기록</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 mx-2 text-slate-600 hover:bg-white/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-headline text-sm">병동 리포트</span>
+</a>
+</nav>
+<div class="px-4 mt-auto space-y-2">
+<button class="w-full py-3 px-4 rounded-xl bg-error text-white font-bold text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+            긴급 호출
+        </button>
+<div class="pt-4 border-t border-slate-200">
+<a class="flex items-center gap-3 py-2 px-2 text-slate-500 hover:text-primary text-xs transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+                도움말
+            </a>
+<a class="flex items-center gap-3 py-2 px-2 text-slate-500 hover:text-primary text-xs transition-colors" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="logout">logout</span>
+                로그아웃
+            </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-20 p-8 min-h-screen">
+<!-- Dashboard Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<nav class="flex text-xs text-on-surface-variant font-label mb-2 uppercase tracking-widest">
+                Unit 4B • Acute Care • Orthopedics
+            </nav>
+<h1 class="text-3xl font-black text-on-surface font-headline tracking-tight">병동 운영 워크플로우</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex -space-x-2">
+<img alt="team" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="Team member avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsU4wlSn4osaZR8l38YPfuUhEUhtTKJMil8aOn5i1oz-gnadrxsqoEyjrukyTTl5xjXy_iENy79RSCAaKHfauO8HPU0sfysNPP543eLA36WR2p0clQ2xVFRVCK5Y6UX0N-040jbyFPw2Qzwa8MdDERpmCbjnAtidDByH60QmMa63PsnV33r1AtvoAVZcr3MUZob_5LBdv4ElSC_TA7H9uzOTdq2ngELBc8kKCJSfxQHYsUh9WmTkJxEGSj0yQXbEY7C2PVBaOelcHM"/>
+<img alt="team" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="Team member avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhWEbV6kI9qwjZ7Bqfx2JXDqQEa-ylKLzPt0uD8UGF0d78EFVSVna6tYnJI8X894jx4R3PpS-YjvWcCcf1QXgZhtb0_PSkW1L8ExkiZ-9MFVny5gi0865uyEGW_Okix1QkXoMtSR8gKRywDm6UEOTM9mrcnY77Y9QBAXo3jkzVDmottAMAbevxufzTHRrgfHPLrfphM-GhwMosT52ME6N2v5odfLs3O8j-eD_IxV43VZRgeiLXjwJvkDAEO9LsdGBMpPhb3pDt_eEE"/>
+<img alt="team" class="w-8 h-8 rounded-full border-2 border-surface" data-alt="Team member avatar portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl5vZcnXvskDMSA5rx3LhZESU8gvuCFkO35kRBA7Wy3Df65e8WQ4WVRVwbBwX5ou6si10Ac4ksxMxkNrevGyRBsfaQw5LeKE4zjX8J9R3rSCvcTSUZgt5Qph5vh9Q15vSAUKTRvUeU9JAjxJnKtiHQvmrtNajiLrZX0JRwFUVIi1Ezs3KWi48I3Bb0BHrcTnbDawp03e48kQQnJKc1ElaaKvWW7gfxo4A_4sCGf0UhUXS4BukfFrzzXdeEQkNk9X8qBi-ijBnVJHul"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center text-[10px] font-bold">+4</div>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant/30 mx-2"></div>
+<div class="text-right">
+<p class="text-xs font-label text-on-surface-variant">현재 시각</p>
+<p class="text-sm font-bold font-headline">14:24 PM</p>
+</div>
+</div>
+</div>
+<!-- Shift Timeline Section -->
+<section class="mb-10 bg-surface-container-low rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-1/3 h-full opacity-5 pointer-events-none">
+<svg viewbox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<path d="M44.7,-76.4C58.1,-69.2,69.5,-57.4,77.3,-43.8C85.1,-30.2,89.2,-15.1,88.4,-0.4C87.6,14.3,81.9,28.6,73.5,41.2C65.1,53.8,54,64.7,40.9,71.8C27.8,78.9,13.9,82.2,-0.2,82.6C-14.3,83,-28.7,80.5,-41.7,73.4C-54.8,66.3,-66.6,54.6,-74.6,41C-82.6,27.4,-86.8,11.7,-85.9,-3.5C-85.1,-18.8,-79.1,-33.6,-69.5,-45.5C-59.8,-57.4,-46.5,-66.4,-32.8,-73.4C-19,-80.4,-9.5,-85.4,4.9,-93.8C19.2,-102.2,31.4,-83.5,44.7,-76.4Z" fill="#00478d" transform="translate(100 100)"></path>
+</svg>
+</div>
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+                금일 Day Shift 운영 타임라인
+            </h3>
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold">근무 진행률 75%</span>
+</div>
+<div class="relative flex items-center justify-between">
+<div class="absolute h-0.5 w-full bg-outline-variant/30 top-1/2 -translate-y-1/2 z-0"></div>
+<div class="absolute h-0.5 w-3/4 bg-primary top-1/2 -translate-y-1/2 z-0"></div>
+<!-- Timeline Points -->
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-4 h-4 rounded-full bg-primary ring-4 ring-primary-fixed"></div>
+<div class="text-center">
+<p class="text-[10px] font-label text-on-surface-variant">07:00</p>
+<p class="text-xs font-bold">인수인계</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-4 h-4 rounded-full bg-primary ring-4 ring-primary-fixed"></div>
+<div class="text-center">
+<p class="text-[10px] font-label text-on-surface-variant">09:00</p>
+<p class="text-xs font-bold">정규 라운딩</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-4 h-4 rounded-full bg-primary ring-4 ring-primary-fixed"></div>
+<div class="text-center">
+<p class="text-[10px] font-label text-on-surface-variant">12:00</p>
+<p class="text-xs font-bold">투약 및 처치</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-6 h-6 rounded-full signature-gradient ring-4 ring-white flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-xs" data-icon="adjust">adjust</span>
+</div>
+<div class="text-center">
+<p class="text-[10px] font-label text-primary font-bold">14:00 (현재)</p>
+<p class="text-xs font-bold text-primary">교대 준비</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3 opacity-40">
+<div class="w-4 h-4 rounded-full bg-outline"></div>
+<div class="text-center">
+<p class="text-[10px] font-label text-on-surface-variant">15:30</p>
+<p class="text-xs font-bold">최종 기록</p>
+</div>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-3 opacity-40">
+<div class="w-4 h-4 rounded-full bg-outline"></div>
+<div class="text-center">
+<p class="text-[10px] font-label text-on-surface-variant">16:00</p>
+<p class="text-xs font-bold">인계 종료</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Patient Management -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Column 1: Ward Notice & Status -->
+<div class="col-span-12 lg:col-span-4 space-y-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-headline font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="campaign">campaign</span>
+                    병동 공지 및 현황
+                </h3>
+</div>
+<!-- Ward Stats Detail -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30">
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-primary/5 p-4 rounded-xl border border-primary/10">
+<p class="text-[10px] font-label text-primary font-bold uppercase tracking-wider mb-1">병상 가동률</p>
+<p class="text-2xl font-black text-primary">87.5%</p>
+<p class="text-[10px] text-slate-500 mt-1">28 / 32 Beds</p>
+</div>
+<div class="bg-secondary/5 p-4 rounded-xl border border-secondary/10">
+<p class="text-[10px] font-label text-secondary font-bold uppercase tracking-wider mb-1">금일 입/퇴원</p>
+<p class="text-2xl font-black text-secondary">3 / 2</p>
+<p class="text-[10px] text-slate-500 mt-1">입원 대기 1명</p>
+</div>
+</div>
+<h4 class="text-xs font-bold mb-3 flex items-center gap-2">
+<span class="w-1 h-3 bg-primary rounded-full"></span>
+                    주요 공지사항
+                </h4>
+<div class="space-y-3">
+<div class="flex gap-3 p-3 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="event">event</span>
+<div>
+<p class="text-xs font-bold">내일 정형외과 컨퍼런스</p>
+<p class="text-[10px] text-on-surface-variant">07:30 AM, 7층 소강당</p>
+</div>
+</div>
+<div class="flex gap-3 p-3 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-error text-sm" data-icon="report">report</span>
+<div>
+<p class="text-xs font-bold">감염 관리 주간 알림</p>
+<p class="text-[10px] text-on-surface-variant">손위생 및 가운 교체 주기 준수</p>
+</div>
+</div>
+<div class="flex gap-3 p-3 bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="info">info</span>
+<div>
+<p class="text-xs font-bold">EHR 시스템 점검 예정</p>
+<p class="text-[10px] text-on-surface-variant">오늘 23:00 - 24:00 (1시간)</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Focus Patients (Small Cards) -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm border border-outline-variant/30">
+<h4 class="text-xs font-bold mb-4 flex items-center justify-between">
+                    집중 관찰 대상자
+                    <span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-[10px]">2명</span>
+</h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-error/10 flex items-center justify-center text-error">
+<span class="text-xs font-bold">402</span>
+</div>
+<div>
+<p class="text-xs font-bold">김민준 (M/68)</p>
+<p class="text-[10px] text-on-surface-variant">POD #1, Pain control</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error text-lg" data-icon="warning">warning</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-error/10 flex items-center justify-center text-error">
+<span class="text-xs font-bold">415</span>
+</div>
+<div>
+<p class="text-xs font-bold">이영희 (F/72)</p>
+<p class="text-[10px] text-on-surface-variant">SpO2 instability</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-error text-lg" data-icon="air">air</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Scheduled: Routine Handoff -->
+<div class="col-span-12 lg:col-span-5 space-y-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-headline font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="assignment_turned_in">assignment_turned_in</span>
+                    정규 인계 준비 현황 (5)
+                </h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Patient Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 hover:border-primary/30 transition-colors">
+<div class="flex justify-between mb-3">
+<span class="text-[10px] font-label bg-surface-container-low px-2 py-0.5 rounded text-on-surface-variant">408-A</span>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="check_circle" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h4 class="text-base font-bold text-on-surface font-headline mb-1">박서준 (M/45)</h4>
+<p class="text-[10px] font-label text-on-surface-variant mb-4">Post-op POD #3, Stable</p>
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-label text-on-surface-variant">기록 완료</span>
+<span class="text-[10px] font-bold text-secondary">100%</span>
+</div>
+<div class="h-1 bg-secondary rounded-full w-full"></div>
+</div>
+<!-- Patient Card 4 -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/30 hover:border-primary/30 transition-colors">
+<div class="flex justify-between mb-3">
+<span class="text-[10px] font-label bg-surface-container-low px-2 py-0.5 rounded text-on-surface-variant">408-C</span>
+<span class="material-symbols-outlined text-outline text-sm" data-icon="pending">pending</span>
+</div>
+<h4 class="text-base font-bold text-on-surface font-headline mb-1">정수민 (F/29)</h4>
+<p class="text-[10px] font-label text-on-surface-variant mb-4">ACL Reconstruction</p>
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-label text-on-surface-variant">기록 진행중</span>
+<span class="text-[10px] font-bold text-primary">85%</span>
+</div>
+<div class="h-1 bg-surface-container-high rounded-full w-full">
+<div class="w-[85%] h-full bg-primary rounded-full"></div>
+</div>
+</div>
+<!-- Large Task Card -->
+<div class="col-span-1 md:col-span-2 bg-white rounded-xl p-5 border border-outline-variant/30">
+<h4 class="font-headline font-bold text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="checklist">checklist</span>
+                        교대 전 필수 체크리스트
+                    </h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/20 hover:bg-surface-container-low cursor-pointer transition-colors">
+<input checked="" class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" type="checkbox"/>
+<span class="text-xs font-medium">전 환자 V/S 측정 및 입력 완료</span>
+</label>
+<label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/20 hover:bg-surface-container-low cursor-pointer transition-colors">
+<input class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" type="checkbox"/>
+<span class="text-xs font-medium">특이사항 SBAR 기록 완료</span>
+</label>
+<label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/20 hover:bg-surface-container-low cursor-pointer transition-colors">
+<input checked="" class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" type="checkbox"/>
+<span class="text-xs font-medium">잔여 약물 카운트 및 인계</span>
+</label>
+<label class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/20 hover:bg-surface-container-low cursor-pointer transition-colors">
+<input class="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" type="checkbox"/>
+<span class="text-xs font-medium">병동 물품 카운트 점검</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 3: Summary & Actions -->
+<div class="col-span-12 lg:col-span-3 space-y-6">
+<!-- Ward Summary Card -->
+<div class="bg-[#171c22] text-white rounded-xl p-6 shadow-xl relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-8xl" data-icon="monitor_heart">monitor_heart</span>
+</div>
+<h3 class="font-headline font-bold text-[10px] mb-6 opacity-60 uppercase tracking-widest">Shift Ward Status</h3>
+<div class="space-y-6 relative z-10">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-3xl font-black font-headline tracking-tighter">18 / 28</p>
+<p class="text-[10px] font-label opacity-50">인계 기록 완료</p>
+</div>
+<div class="w-12 h-12 rounded-full border-4 border-primary/40 flex items-center justify-center">
+<span class="text-xs font-bold">64%</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] opacity-70">
+<span>오늘의 검사 건수</span>
+<span>12건 완료 / 15건</span>
+</div>
+<div class="w-full h-1.5 bg-white/10 rounded-full">
+<div class="w-[80%] h-full bg-secondary-fixed rounded-full"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 pt-2">
+<div class="bg-white/5 p-3 rounded-lg border border-white/10">
+<p class="text-xs font-bold text-error">2</p>
+<p class="text-[9px] opacity-50">긴급 이슈</p>
+</div>
+<div class="bg-white/5 p-3 rounded-lg border border-white/10">
+<p class="text-xs font-bold text-secondary-container">1</p>
+<p class="text-[9px] opacity-50">응급 벨</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Actions List -->
+<div class="space-y-2">
+<button class="w-full py-4 px-4 bg-white border border-outline-variant/30 rounded-xl flex items-center gap-3 hover:bg-surface-container-high transition-all group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" data-icon="post_add">post_add</span>
+<div class="text-left">
+<p class="text-xs font-bold text-on-surface">입원 기록 작성</p>
+<p class="text-[10px] text-on-surface-variant">새로운 환자 데이터 등록</p>
+</div>
+</button>
+<button class="w-full py-4 px-4 bg-white border border-outline-variant/30 rounded-xl flex items-center gap-3 hover:bg-surface-container-high transition-all group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" data-icon="lab_research">lab_research</span>
+<div class="text-left">
+<p class="text-xs font-bold text-on-surface">랩 결과 통합 확인</p>
+<p class="text-[10px] text-on-surface-variant">오늘의 검체 및 영상 검사</p>
+</div>
+</button>
+<button class="w-full py-4 px-4 bg-white border border-outline-variant/30 rounded-xl flex items-center gap-3 hover:bg-surface-container-high transition-all group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" data-icon="print">print</span>
+<div class="text-left">
+<p class="text-xs font-bold text-on-surface">인계 시트 출력</p>
+<p class="text-[10px] text-on-surface-variant">오프라인 라운딩용 요약</p>
+</div>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="signature-gradient w-14 h-14 rounded-full flex items-center justify-center text-white shadow-2xl shadow-primary/40 transform hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-2xl" data-icon="add" data-weight="fill" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+</body></html>
