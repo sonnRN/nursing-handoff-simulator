@@ -165,12 +165,19 @@ function createHttpServer(options = {}) {
 }
 
 function startHttpServer(options = {}) {
-  const port = Number.parseInt(String(options.port || process.env.PORT || 8787), 10);
+  const requestedPort = Object.prototype.hasOwnProperty.call(options, "port")
+    ? options.port
+    : (process.env.PORT || 8787);
+  const port = Number.parseInt(String(requestedPort), 10);
   const server = createHttpServer(options);
   return new Promise((resolve, reject) => {
     server.once("error", reject);
     server.listen(port, () => {
-      resolve({ server, port });
+      const address = server.address();
+      resolve({
+        server,
+        port: address && typeof address === "object" ? address.port : port
+      });
     });
   });
 }

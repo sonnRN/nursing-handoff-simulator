@@ -31,7 +31,7 @@
   ];
   const THEME_STORAGE_KEY = "digital-clinician-theme";
   const LOCALE_STORAGE_KEY = "digital-clinician-locale";
-  const DEFAULT_SELECTION = { wardType: "general", department: "internal" };
+  const DEFAULT_SELECTION = { wardType: "", department: "" };
   const WARD_OPTIONS = [
     {
       id: "general",
@@ -510,6 +510,7 @@
     const ui = window.StitchUi || {};
     const step = resolveStep(app.state.step);
     const vm = viewModel(step);
+    window.__STITCH_CURRENT_VM = vm;
 
     if (step === "landing" && typeof ui.landingView === "function") {
       root.innerHTML = ui.landingView(vm);
@@ -617,6 +618,7 @@
     const dashboardMetrics = getDashboardMetrics();
     const recordsMetrics = getRecordsMetrics();
     const selection = selectionData();
+    const dashboardContext = buildDashboardContext(selection);
 
     return {
       e: escapeHtml,
@@ -633,6 +635,8 @@
       latestShift: latestShift(),
       selection: selection,
       selector: selection,
+      dashboardContext: dashboardContext,
+      flowNav: flowNavigation(),
       selectedDate: app.state.selectedDate,
       dates: timelineDates(),
       emrTab: app.state.emrTab,
@@ -799,12 +803,20 @@
       if (target === "dashboard" && app.state.step === "landing" && !node.closest(".qa-shell")) {
         return setStep("selector");
       }
+      if (target === "dashboard" && app.state.step === "selector" && !selectionReady()) {
+        showToast(app.state.locale === "en" ? "Select a ward and department first." : "병동과 진료과를 먼저 선택하세요.", "error");
+        return;
+      }
       return setStep(target);
     }
     if (action === "set-theme") return setTheme(node.getAttribute("data-theme"));
     if (action === "set-locale") return setLocale(node.getAttribute("data-locale"));
     if (action === "select-ward") {
       app.state.selection.wardType = node.getAttribute("data-ward") || app.state.selection.wardType;
+      const allowed = allowedDepartmentsForWard(app.state.selection.wardType);
+      if (!allowed.includes(app.state.selection.department)) {
+        app.state.selection.department = "";
+      }
       return render();
     }
     if (action === "select-department") {
@@ -1054,6 +1066,7 @@
   }
 
   function restartSimulation() {
+    app.state.selection = Object.assign({}, DEFAULT_SELECTION);
     app.state.selectedDate = app.scenario.patient.currentDate;
     app.state.emrTab = "overview";
     app.state.prepNotes = "";
@@ -1209,6 +1222,252 @@
     };
     const localeLabels = labels[app.state.locale] || labels.ko;
     return localeLabels[step] || step;
+  }
+
+  function allowedDepartmentsForWard(wardType) {
+    if (wardType === "icu") return ["internal", "surgery"];
+    if (wardType === "general") return ["internal", "surgery", "orthopedics", "neurosurgery", "pediatrics"];
+    return [];
+  }
+
+  function selectionReady() {
+    return Boolean(app.state.selection.wardType && app.state.selection.department);
+  }
+
+  function selectionData() {
+    const locale = app.state.locale;
+    const wardOptions = WARD_OPTIONS.map(function mapWard(option) {
+      return {
+        id: option.id,
+        icon: option.icon,
+        label: option.label[locale] || option.label.ko,
+        description: option.description[locale] || option.description.ko,
+        selectedLabel: t("selected"),
+        chooseLabel: t("choose")
+      };
+    });
+    const allowedDepartments = allowedDepartmentsForWard(app.state.selection.wardType);
+    const departmentOptions = DEPARTMENT_OPTIONS
+      .filter(function filterDepartment(option) {
+        return allowedDepartments.includes(option.id);
+      })
+      .map(function mapDepartment(option) {
+        return {
+          id: option.id,
+          icon: option.icon,
+          label: option.label[locale] || option.label.ko
+        };
+      });
+
+    const wardMatch = wardOptions.find(function findWard(option) {
+      return option.id === app.state.selection.wardType;
+    });
+    const departmentMatch = departmentOptions.find(function findDepartment(option) {
+      return option.id === app.state.selection.department;
+    });
+
+    const emptyText = locale === "en" ? "Not selected" : "미선택";
+    return {
+      wardType: app.state.selection.wardType,
+      department: app.state.selection.department,
+      wardLabel: wardMatch ? wardMatch.label : emptyText,
+      departmentLabel: departmentMatch ? departmentMatch.label : emptyText,
+      summary: selectionReady()
+        ? ((wardMatch ? wardMatch.label : emptyText) + " / " + (departmentMatch ? departmentMatch.label : emptyText))
+        : (locale === "en" ? "Choose ward and department" : "병동과 진료과를 선택하세요"),
+      departmentVisible: Boolean(app.state.selection.wardType),
+      ready: selectionReady(),
+      wardOptions: wardOptions,
+      departmentOptions: departmentOptions
+    };
+  }
+
+  function flowNavigation() {
+    return [
+      { id: "dashboard", label: app.state.locale === "en" ? "Dashboard" : "대시보드", target: "dashboard" },
+      { id: "worklist", label: app.state.locale === "en" ? "Worklist" : "환자명단", target: "worklist" },
+      { id: "emr", label: app.state.locale === "en" ? "Simulation Training" : "시뮬레이션 훈련", target: "emr" },
+      { id: "records", label: app.state.locale === "en" ? "Learning Records" : "학습 기록", target: "records" }
+    ];
+  }
+
+  function buildDashboardContext(selection) {
+    const wardType = selection.wardType || "general";
+    const department = selection.department || "internal";
+    const locale = app.state.locale;
+    const titleLookup = {
+      general: locale === "en" ? "Ward 4" : "제4병동",
+      icu: locale === "en" ? "ICU" : "중환자실"
+    };
+    const descriptorLookup = {
+      general: locale === "en" ? "General Ward" : "일반 병동",
+      icu: locale === "en" ? "Intensive Care Unit" : "중환자실"
+    };
+    const profileMap = {
+      general: {
+        internal: {
+          unitCode: "UNIT 4B · GENERAL WARD · INTERNAL MEDICINE",
+          workflowTitle: locale === "en" ? "Ward Operations Workflow" : "병동 운영 워크플로우",
+          shiftLabel: locale === "en" ? "Today shift overview" : "금일 Day Shift 운영 현황",
+          metrics: [
+            { label: locale === "en" ? "Bed occupancy" : "병상 가동률", value: "87.5%", detail: locale === "en" ? "21 / 24 occupied" : "21 / 24 occupied", tone: "text-blue-700" },
+            { label: locale === "en" ? "Admissions / discharges" : "금일 입퇴실", value: "3 / 2", detail: locale === "en" ? "includes 1 ED transfer" : "includes 1 ED transfer", tone: "text-emerald-700" },
+            { label: locale === "en" ? "High-risk monitoring" : "중점 모니터링", value: "5", detail: locale === "en" ? "oxygen, AKI, fall risk" : "oxygen, AKI, fall risk", tone: "text-amber-600" }
+          ],
+          notices: [
+            locale === "en" ? "Morning huddle moved to 08:40 because portable chest x-ray is delayed." : "Portable chest x-ray 지연으로 morning huddle이 08:40으로 조정되었습니다.",
+            locale === "en" ? "Two contact isolation rooms require PPE cart replenishment before 11:00." : "격리 병실 2곳은 11:00 전 PPE cart 보충이 필요합니다.",
+            locale === "en" ? "PT consult backlog affects discharge timing for room 412 and 416." : "412호, 416호는 PT consult 지연으로 discharge timing이 미뤄지고 있습니다."
+          ],
+          checklist: [
+            locale === "en" ? "BMP/Mg repeat by 14:00 for decompensated HF patient." : "심부전 환자 BMP/Mg 재검 14:00까지 완료",
+            locale === "en" ? "Pressure injury bundle audit for room 418." : "418호 pressure injury bundle audit",
+            locale === "en" ? "Update family on discharge hold for room 412." : "412호 discharge hold 관련 보호자 업데이트",
+            locale === "en" ? "Verify oxygen weaning order set before evening shift." : "Evening shift 전 oxygen weaning order set 재확인"
+          ],
+          alerts: [
+            { room: "412", item: locale === "en" ? "Hypokalemia trending down" : "저칼륨 지속 저하", level: locale === "en" ? "watch" : "주의" },
+            { room: "416", item: locale === "en" ? "AKI with low urine output" : "AKI + low urine output", level: locale === "en" ? "high" : "높음" },
+            { room: "418", item: locale === "en" ? "Fall risk + nighttime confusion" : "낙상 위험 + 야간 혼돈", level: locale === "en" ? "watch" : "주의" }
+          ],
+          status: { occupied: "18/28", subtitle: locale === "en" ? "beds in use" : "beds in use" },
+          statusCards: [
+            { label: locale === "en" ? "New admissions" : "신규 입실", value: "2" },
+            { label: locale === "en" ? "Discharge holds" : "퇴원 보류", value: "1" },
+            { label: locale === "en" ? "Isolation rooms" : "격리 병실", value: "2" },
+            { label: locale === "en" ? "Oxygen support" : "산소 치료", value: "4" }
+          ],
+          timeline: ["인수인계", "정규 회진", "투약 및 처치", "브리핑 완료", "퇴원 계획", "잔여 과제"]
+        },
+        surgery: {
+          unitCode: "UNIT 4B · GENERAL WARD · SURGERY",
+          workflowTitle: locale === "en" ? "Ward Operations Workflow" : "병동 운영 워크플로우",
+          shiftLabel: locale === "en" ? "Post-op coordination overview" : "금일 수술 병동 운영 현황",
+          metrics: [
+            { label: locale === "en" ? "Bed occupancy" : "병상 가동률", value: "82.0%", detail: locale === "en" ? "18 / 22 occupied" : "18 / 22 occupied", tone: "text-blue-700" },
+            { label: locale === "en" ? "Post-op arrivals" : "수술 후 입실", value: "4", detail: locale === "en" ? "2 expected by noon" : "2 expected by noon", tone: "text-emerald-700" },
+            { label: locale === "en" ? "Drain / wound checks" : "Drain / wound check", value: "6", detail: locale === "en" ? "needs staged review" : "needs staged review", tone: "text-amber-600" }
+          ],
+          notices: [
+            locale === "en" ? "OR turnover pushed two admissions to late afternoon." : "OR turnover 지연으로 입실 2건이 late afternoon으로 이동했습니다.",
+            locale === "en" ? "Wound vac stock is low; central supply refill ETA 10:30." : "Wound vac stock이 부족하며 central supply refill ETA는 10:30입니다.",
+            locale === "en" ? "NPO signage audit due before elective cases return." : "Elective case 복귀 전 NPO signage audit이 필요합니다."
+          ],
+          checklist: [
+            locale === "en" ? "Room 421 JP drain output trend at 13:00." : "421호 JP drain output trend 13:00 재평가",
+            locale === "en" ? "Room 423 pain reassessment after PCA adjustment." : "423호 PCA 조정 후 pain reassessment",
+            locale === "en" ? "Verify bowel regimen for opioid-heavy cases." : "Opioid 사용 환자 bowel regimen 재확인",
+            locale === "en" ? "Confirm OR-to-floor SBAR for late admissions." : "Late admission OR-to-floor SBAR 확인"
+          ],
+          alerts: [
+            { room: "421", item: locale === "en" ? "Drain output increased overnight" : "야간 drain output 증가", level: locale === "en" ? "high" : "높음" },
+            { room: "423", item: locale === "en" ? "Pain score remains 8/10" : "통증 점수 8/10 유지", level: locale === "en" ? "watch" : "주의" },
+            { room: "424", item: locale === "en" ? "NPO order mismatch" : "NPO order mismatch", level: locale === "en" ? "watch" : "주의" }
+          ],
+          status: { occupied: "16/22", subtitle: locale === "en" ? "beds in use" : "beds in use" },
+          statusCards: [
+            { label: locale === "en" ? "Post-op arrivals" : "수술 후 입실", value: "4" },
+            { label: locale === "en" ? "Drain checks" : "Drain 체크", value: "6" },
+            { label: locale === "en" ? "NPO audits" : "NPO audit", value: "3" },
+            { label: locale === "en" ? "Pain reviews" : "Pain review", value: "5" }
+          ],
+          timeline: ["환자 이송", "수술 후 회복", "통증 조절", "배액관 점검", "퇴원 교육", "잔여 과제"]
+        }
+      },
+      icu: {
+        internal: {
+          unitCode: "ICU · MEDICAL INTENSIVE CARE",
+          workflowTitle: locale === "en" ? "Critical Care Operations" : "중환자실 운영 워크플로우",
+          shiftLabel: locale === "en" ? "High-acuity shift overview" : "금일 MICU 운영 현황",
+          metrics: [
+            { label: locale === "en" ? "Bed occupancy" : "병상 가동률", value: "91.7%", detail: locale === "en" ? "11 / 12 occupied" : "11 / 12 occupied", tone: "text-blue-700" },
+            { label: locale === "en" ? "Ventilator cases" : "인공호흡기", value: "5", detail: locale === "en" ? "2 weaning today" : "2 weaning today", tone: "text-emerald-700" },
+            { label: locale === "en" ? "Escalation watch" : "에스컬레이션", value: "3", detail: locale === "en" ? "pressors / sepsis / AKI" : "pressors / sepsis / AKI", tone: "text-amber-600" }
+          ],
+          notices: [
+            locale === "en" ? "One CRRT circuit change is scheduled for 09:30." : "CRRT circuit change 1건이 09:30 예정입니다.",
+            locale === "en" ? "Sepsis bundle audit due before noon for bed 3." : "Bed 3 sepsis bundle audit이 정오 전 필요합니다.",
+            locale === "en" ? "Vent weaning checklist must be documented before shift handoff." : "Shift handoff 전 vent weaning checklist 문서화가 필요합니다."
+          ],
+          checklist: [
+            locale === "en" ? "ABG recheck after FiO2 change for bed 2." : "Bed 2 FiO2 변경 후 ABG 재검",
+            locale === "en" ? "Pressor titration documentation for bed 4." : "Bed 4 pressor titration documentation",
+            locale === "en" ? "Central line dressing audit for bed 6." : "Bed 6 central line dressing audit",
+            locale === "en" ? "Family update after intensivist round." : "Intensivist round 후 보호자 설명"
+          ],
+          alerts: [
+            { room: "ICU-2", item: locale === "en" ? "Desaturation during turning" : "체위 변경 시 desaturation", level: locale === "en" ? "high" : "높음" },
+            { room: "ICU-4", item: locale === "en" ? "Pressor requirement rising" : "Pressor requirement 상승", level: locale === "en" ? "high" : "높음" },
+            { room: "ICU-6", item: locale === "en" ? "CRRT filter clotting risk" : "CRRT filter clotting risk", level: locale === "en" ? "watch" : "주의" }
+          ],
+          status: { occupied: "11/12", subtitle: locale === "en" ? "critical care beds" : "critical care beds" },
+          statusCards: [
+            { label: locale === "en" ? "Ventilator" : "Ventilator", value: "5" },
+            { label: locale === "en" ? "Pressors" : "Pressors", value: "3" },
+            { label: locale === "en" ? "CRRT" : "CRRT", value: "1" },
+            { label: locale === "en" ? "Isolation" : "Isolation", value: "2" }
+          ],
+          timeline: ["중증도 평가", "Vent round", "Hemodynamic review", "Bundle check", "Family update", "잔여 과제"]
+        },
+        surgery: {
+          unitCode: "ICU · SURGICAL INTENSIVE CARE",
+          workflowTitle: locale === "en" ? "Critical Care Operations" : "중환자실 운영 워크플로우",
+          shiftLabel: locale === "en" ? "Post-op ICU overview" : "금일 SICU 운영 현황",
+          metrics: [
+            { label: locale === "en" ? "Bed occupancy" : "병상 가동률", value: "83.3%", detail: locale === "en" ? "10 / 12 occupied" : "10 / 12 occupied", tone: "text-blue-700" },
+            { label: locale === "en" ? "Fresh post-op" : "수술 후 중환자", value: "4", detail: locale === "en" ? "1 OR return pending" : "1 OR return pending", tone: "text-emerald-700" },
+            { label: locale === "en" ? "Drain / line watch" : "Drain / line watch", value: "5", detail: locale === "en" ? "arterial + central lines" : "arterial + central lines", tone: "text-amber-600" }
+          ],
+          notices: [
+            locale === "en" ? "Two post-op abdominal cases return after 14:00." : "14:00 이후 복부 수술 후 환자 2명이 복귀 예정입니다.",
+            locale === "en" ? "Massive transfusion cooler audit is due at 11:00." : "Massive transfusion cooler audit이 11:00 예정입니다.",
+            locale === "en" ? "Extubation readiness rounds start at 15:30." : "15:30 extubation readiness round가 시작됩니다."
+          ],
+          checklist: [
+            locale === "en" ? "Bed 1 lactate repeat after OR return." : "Bed 1 OR 복귀 후 lactate 재검",
+            locale === "en" ? "Bed 5 epidural site assessment." : "Bed 5 epidural site assessment",
+            locale === "en" ? "Document drain output trend every 4 hours." : "Drain output trend 4시간마다 문서화",
+            locale === "en" ? "Confirm blood product availability." : "혈액 제제 준비 상태 확인"
+          ],
+          alerts: [
+            { room: "SICU-1", item: locale === "en" ? "Lactate rising after surgery" : "수술 후 lactate 상승", level: locale === "en" ? "high" : "높음" },
+            { room: "SICU-5", item: locale === "en" ? "Epidural reassessment overdue" : "Epidural reassessment overdue", level: locale === "en" ? "watch" : "주의" },
+            { room: "SICU-7", item: locale === "en" ? "Arterial line damping" : "Arterial line damping", level: locale === "en" ? "watch" : "주의" }
+          ],
+          status: { occupied: "10/12", subtitle: locale === "en" ? "critical care beds" : "critical care beds" },
+          statusCards: [
+            { label: locale === "en" ? "Fresh post-op" : "수술 후 복귀", value: "4" },
+            { label: locale === "en" ? "Drains" : "Drain", value: "5" },
+            { label: locale === "en" ? "Blood coolers" : "Blood cooler", value: "2" },
+            { label: locale === "en" ? "Extubation review" : "Extubation review", value: "3" }
+          ],
+          timeline: ["OR handoff", "Hemodynamic review", "Drain check", "Transfusion audit", "Extubation prep", "잔여 과제"]
+        }
+      }
+    };
+
+    const fallback = profileMap.general.internal;
+    const wardProfile = profileMap[wardType] || profileMap.general;
+    const profile = wardProfile[department] || fallback;
+    const departmentLabel = optionLabel(DEPARTMENT_OPTIONS, department);
+
+    return {
+      wardType: wardType,
+      department: department,
+      wardName: titleLookup[wardType] || titleLookup.general,
+      wardDescriptor: descriptorLookup[wardType] || descriptorLookup.general,
+      departmentLabel: departmentLabel,
+      unitCode: profile.unitCode,
+      workflowTitle: profile.workflowTitle,
+      shiftLabel: profile.shiftLabel,
+      metrics: profile.metrics,
+      notices: profile.notices,
+      checklist: profile.checklist,
+      alerts: profile.alerts,
+      status: profile.status,
+      statusCards: profile.statusCards,
+      timeline: profile.timeline
+    };
   }
 
   function durationLabel() {

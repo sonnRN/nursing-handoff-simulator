@@ -39,6 +39,16 @@
 
   ui.selectorView = function selectorView(vm) {
     const e = vm.e;
+    const departmentSection = vm.selector.departmentVisible
+      ? `<section class="selector-section">
+          <div class="selector-section__label">${e(vm.t("selectorDeptTitle"))}</div>
+          <div class="selector-dept-grid">
+            ${vm.selector.departmentOptions.map(function (option) {
+              return departmentButton(option, option.id === vm.selector.department, e);
+            }).join("")}
+          </div>
+        </section>`
+      : "";
     return `<div class="selector-screen screen-fade">
       <aside class="selector-rail hidden md:flex">
         <div class="selector-rail__brand">
@@ -81,14 +91,7 @@
             </div>
           </section>
 
-          <section class="selector-section">
-            <div class="selector-section__label">${e(vm.t("selectorDeptTitle"))}</div>
-            <div class="selector-dept-grid">
-              ${vm.selector.departmentOptions.map(function (option) {
-                return departmentButton(option, option.id === vm.selector.department, e);
-              }).join("")}
-            </div>
-          </section>
+          ${departmentSection}
 
           <footer class="selector-footer">
             <div class="selector-footer__meta">
@@ -101,7 +104,7 @@
                 <strong>${e(vm.t("selectorFooterReady"))}</strong>
               </div>
             </div>
-            <button type="button" class="selector-enter" data-action="goto" data-target="dashboard">
+            <button type="button" class="selector-enter ${vm.selector.ready ? "" : "selector-enter--disabled"}" data-action="goto" data-target="dashboard" ${vm.selector.ready ? "" : "aria-disabled=\"true\""}>
               <span>${e(vm.t("enterDashboard"))}</span>
               <span class="material-symbols-outlined">arrow_forward</span>
             </button>

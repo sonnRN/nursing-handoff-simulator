@@ -19,31 +19,31 @@ const RUNS = [
   },
   {
     name: "dashboard",
-    clickSelector: "button[data-action='goto'][data-target='dashboard']",
+    clickSelector: ".qa-panel button[data-action='goto'][data-target='dashboard']",
     pauseMs: 400,
     useQa: true
   },
   {
     name: "worklist",
-    clickSelector: "button[data-action='goto'][data-target='worklist']",
+    clickSelector: ".qa-panel button[data-action='goto'][data-target='worklist']",
     pauseMs: 400,
     useQa: true
   },
   {
     name: "emr",
-    clickSelector: "button[data-action='goto'][data-target='emr']",
+    clickSelector: ".qa-panel button[data-action='goto'][data-target='emr']",
     pauseMs: 400,
     useQa: true
   },
   {
     name: "records",
-    clickSelector: "button[data-action='goto'][data-target='records']",
+    clickSelector: ".qa-panel button[data-action='goto'][data-target='records']",
     pauseMs: 400,
     useQa: true
   },
   {
     name: "demo-feedback",
-    clickSelector: "button[data-action='run-demo-session']",
+    clickSelector: ".qa-panel button[data-action='run-demo-session']",
     pauseMs: 5200,
     useQa: true
   }

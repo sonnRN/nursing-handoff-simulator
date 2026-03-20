@@ -859,6 +859,12 @@ textarea {
   box-shadow: 0 10px 24px rgba(15, 79, 182, 0.2);
 }
 
+.selector-enter--disabled {
+  background: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
 html.dark body {
   background: #020617;
   color: #e2e8f0;
