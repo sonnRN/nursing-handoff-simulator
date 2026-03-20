@@ -36,4 +36,42 @@
     const e = vm.e;
     return `<div class="view-shell screen-fade bg-surface text-on-surface">${marketingNav(vm)}<main class="pt-16"><section class="px-6 py-16 bg-surface-variant border-b border-outline"><div class="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[minmax(0,1.5fr)_380px] gap-10 items-start"><div><nav class="flex items-center gap-2 mb-4"><span class="text-xs font-label text-on-surface-variant uppercase tracking-widest">Simulation Session</span><span class="material-symbols-outlined text-[10px]">chevron_right</span><span class="text-xs font-label text-primary font-bold uppercase tracking-widest">${e(vm.scenario.title)}</span></nav><h1 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-4">시나리오 브리핑</h1><p class="text-on-surface-variant max-w-3xl text-lg leading-relaxed">${e(vm.scenario.briefing.objective)}</p><div class="mt-8 flex flex-wrap gap-4"><button class="bg-primary text-white px-6 py-3 rounded-xl font-label text-sm font-bold shadow-sm hover:opacity-90 transition-all" data-action="goto" data-target="emr">차트 검토 시작</button><button class="bg-surface-container-high px-6 py-3 rounded-xl font-label text-sm font-semibold hover:bg-surface-container-highest transition-colors" data-action="goto" data-target="landing">랜딩으로 돌아가기</button></div></div><div class="bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-6 shadow-ambient"><p class="text-xs font-label font-bold text-primary uppercase tracking-widest mb-2">Case snapshot</p><h2 class="text-2xl font-bold mb-4">${e(vm.patient.name)}</h2><div class="space-y-3 text-sm text-on-surface-variant"><p><span class="font-semibold text-on-surface">Admission:</span> ${e(vm.patient.admissionReason)}</p><p><span class="font-semibold text-on-surface">Current shift:</span> ${e(vm.latestShift.label)}</p><p><span class="font-semibold text-on-surface">Allergies:</span> ${e(vm.patient.allergies.join(", "))}</p><p><span class="font-semibold text-on-surface">Code status:</span> ${e(vm.patient.codeStatus)}</p></div></div></div></section><section class="px-6 py-16 bg-white"><div class="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-3 gap-8">${infoPanel("학습 목표", vm.patient.learningGoals, e)}${pillPanel("문제 목록", vm.patient.problemList, e)}${infoPanel("현재 초점", vm.scenario.currentFocusChecklist, e)}</div></section><section class="px-6 pb-20 bg-white"><div class="max-w-7xl mx-auto bg-surface-container-low rounded-2xl border border-outline p-8 lg:p-10"><div class="flex items-center justify-between gap-4 mb-8 flex-wrap"><div><p class="text-xs font-label font-bold uppercase tracking-widest text-on-surface-variant">Multi-day evolution</p><h2 class="text-2xl font-bold mt-2">이 환자는 왜 아직 퇴원할 수 없는가</h2></div><div class="rounded-full bg-primary-fixed px-4 py-2 text-sm font-semibold text-on-primary-fixed">총 ${vm.scenario.shiftHistory.length}개 교대 기록</div></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-6">${vm.scenario.shiftHistory.map(function (shift, index) { return `<div class="bg-white rounded-xl border border-outline p-6"><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold">${index + 1}</div><div><p class="text-sm font-bold text-on-surface">${e(shift.label)}</p><p class="text-xs text-on-surface-variant uppercase tracking-wider">Shift summary</p></div></div><p class="text-sm leading-relaxed text-on-surface-variant">${e(shift.summary)}</p></div>`; }).join("")}</div></div></section></main>${qa(vm)}</div>`;
   };
+  function marketingNav(vm) {
+    return `<nav class="fixed top-0 w-full z-50 bg-white border-b border-outline"><div class="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto"><div class="text-xl font-bold tracking-tight text-primary">Digital Clinician</div><div class="hidden md:flex items-center gap-8 text-sm font-semibold text-on-surface-variant"><span class="text-primary brand-border border-primary pb-1">${vm.e(vm.stepLabel)}</span><span>媛꾪샇 ?몄닔?멸퀎</span><button type="button" class="brand-border hover:text-primary pb-1 text-on-surface-variant" data-action="open-patch-notes">${vm.e(vm.t("patchNotesMenu"))}</button><span>${vm.e(vm.openAiText)}</span></div><div class="flex items-center gap-4"><div class="hidden lg:flex items-center bg-surface-variant border border-outline rounded-md px-3 py-1.5 text-on-surface-variant"><span class="material-symbols-outlined text-lg mr-2">search</span><span class="text-xs">?섏옄 湲곕줉 寃??..</span></div><button type="button" class="hidden sm:inline-flex items-center rounded-full border border-outline px-3 py-2 text-xs font-bold text-on-surface-variant hover:text-primary hover:border-primary transition-colors" data-action="open-patch-notes">${vm.e(vm.t("patchNotesMenu"))}</button><button class="material-symbols-outlined text-on-surface-variant hover:text-primary p-1.5 transition-all">notifications</button><button class="material-symbols-outlined text-on-surface-variant hover:text-primary p-1.5 transition-all">account_circle</button><button class="bg-primary text-white px-5 py-2 rounded-md text-sm font-bold hover:bg-blue-800 transition-all" data-action="goto" data-target="${vm.step === "landing" ? "dashboard" : "emr"}">${vm.step === "landing" ? "援먯쑁 ?쒖옉?섍린" : "李⑦듃 蹂닿린"}</button></div></div></nav>`;
+  }
+
+  ui.patchNotesOverlay = function patchNotesOverlay(vm) {
+    if (!vm.patchNotesOpen) return "";
+    const e = vm.e;
+    return `<div class="fixed inset-0 z-[72] bg-slate-950/25 backdrop-blur-sm px-6 py-24 overflow-y-auto">
+      <div class="max-w-3xl mx-auto bg-white border border-outline rounded-3xl shadow-2xl overflow-hidden">
+        <div class="px-6 py-5 border-b border-outline bg-surface-container-low flex items-start justify-between gap-4">
+          <div>
+            <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-primary">${e(vm.t("patchNotesMenu"))}</p>
+            <h2 class="mt-2 text-2xl font-black text-on-surface">${e(vm.t("patchNotesTitle"))}</h2>
+            <p class="mt-2 text-sm text-on-surface-variant">${e(vm.t("patchNotesSubtitle"))}</p>
+          </div>
+          <button type="button" class="rounded-full border border-outline px-3 py-2 text-sm font-semibold text-on-surface-variant hover:text-primary hover:border-primary transition-colors" data-action="close-patch-notes">${e(vm.t("patchNotesClose"))}</button>
+        </div>
+        <div class="px-6 py-6 space-y-4 bg-white">
+          ${vm.patchNotes.map(function (note, index) {
+            return `<article class="rounded-2xl border ${index === 0 ? "border-primary/20 bg-primary/5" : "border-outline bg-surface-container-lowest"} p-5">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">${e(note.version)}</p>
+                  <h3 class="mt-2 text-lg font-black text-on-surface">${e(note.title)}</h3>
+                </div>
+                <span class="inline-flex items-center rounded-full bg-white border border-outline px-3 py-1 text-xs font-semibold text-on-surface-variant">${e(note.date)}</span>
+              </div>
+              <div class="mt-4 space-y-3">
+                ${note.items.map(function (item) {
+                  return `<div class="flex items-start gap-3 text-sm text-on-surface-variant leading-relaxed"><span class="material-symbols-outlined text-primary text-base mt-0.5">check_circle</span><span>${e(item)}</span></div>`;
+                }).join("")}
+              </div>
+            </article>`;
+          }).join("")}
+        </div>
+      </div>
+    </div>`;
+  };
 })(typeof globalThis !== "undefined" ? globalThis : this);

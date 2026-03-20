@@ -161,6 +161,41 @@ Original prompt: [$develop-web-game](C:\\Users\\gse06\\.codex\\skills\\develop-w
   - `node tests/http-server-smoke.js`
   - `node tests/simulation-api-smoke.js`
   - `npm run test:browser:stitch-ui`
+
+## Patch notes, ward dashboard refinement, and worklist normalization
+
+- Added patch note data and patch-note open/close state in `stitch-app.js`.
+- Added a landing-page patch-note entry point and user-facing patch-note overlay in `stitch-ui-marketing.js`.
+- Kept the Stitch ward dashboard as the baseline source and refined `stitch-ui-admin.js` to read more like a real ward operations board:
+  - occupancy / admissions-discharge / escalation metrics
+  - notices and handoff panel
+  - shift checklist
+  - focused watch list
+  - live status card with subtle motion
+- Added bridge styles and subtle live-board motion in `style.css` for the dashboard board, signal cards, and live indicators.
+- Normalized worklist action buttons so the right-side controls use consistent labels and consistent sizing.
+- Changed worklist diagnosis/summary content so the summary field uses diagnosis-only text from the synthetic patient problem list, then widened the summary column so it remains visible in the Stitch worklist layout.
+- Reviewed real-world hospital command-center / flow-board patterns before applying the dashboard refinements, but kept the implemented UI aligned to the Stitch screen instead of replacing it with a new layout.
+
+## Latest validation
+
+- Passed:
+  - `node --check stitch-app.js`
+  - `node --check stitch-ui-marketing.js`
+  - `node --check stitch-ui-admin.js`
+  - `node --check stitch-ui-clinical.js`
+  - `npm run test:selector-flow`
+  - `node tests/http-server-smoke.js`
+  - `node tests/simulation-api-smoke.js`
+  - `npm run test:browser:stitch-ui`
+- Re-inspected current screenshots under `output/web-game/stitch-ui/`:
+  - `landing/shot-0.png`
+  - `dashboard/shot-0.png`
+  - `worklist/shot-0.png`
+- Verified visually:
+  - landing top navigation includes the patch-note entry point
+  - dashboard now presents ward-board style operational signals closer to the Stitch reference
+  - worklist rows show diagnosis-only summaries and uniform action buttons
   - direct Playwright check confirming left-rail navigation reaches `dashboard`, `worklist`, and `records` from the simulation screen.
 
 ## Ward selector, theme, and locale update

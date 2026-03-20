@@ -526,4 +526,314 @@
       </div>
     </div>`;
   };
+  function statusPill(status, locale) {
+    if (status === "In Progress") {
+      return `<span class="inline-flex min-w-[104px] justify-center items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-bold bg-primary-fixed text-on-primary-fixed-variant whitespace-nowrap"><span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1;">mic</span>${locale === "en" ? "Handoff ready" : "인계 준비"}</span>`;
+    }
+    if (status === "Completed") {
+      return `<span class="inline-flex min-w-[104px] justify-center items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant whitespace-nowrap"><span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1;">check_circle</span>${locale === "en" ? "Complete" : "완료"}</span>`;
+    }
+    return `<span class="inline-flex min-w-[104px] justify-center items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-bold bg-secondary-container text-on-secondary-container whitespace-nowrap"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>${locale === "en" ? "Ready" : "준비 완료"}</span>`;
+  }
+
+  function worklistCard(card, e, locale) {
+    return `<div class="bg-surface-container-low rounded-2xl p-4 sm:p-5 hover:bg-surface-container transition-colors group ${card.emphasis || ""}">
+      <div class="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
+        <div class="flex items-center gap-4 lg:w-[300px] shrink-0">
+          <img alt="Patient Avatar" class="w-12 h-12 rounded-full object-cover shrink-0 ${card.imageTone || ""}" src="${card.image}">
+          <div class="min-w-0">
+            <h3 class="text-lg font-bold text-on-surface leading-tight truncate">${e(card.name)}</h3>
+            <div class="flex items-center flex-wrap gap-2 text-xs text-on-surface-variant font-label mt-1">
+              <span class="bg-primary-fixed px-2 py-0.5 rounded text-on-primary-fixed-variant font-bold">${e(card.room)}</span>
+              <span>${e(card.meta)}</span>
+              <span class="hidden sm:inline">${e(card.idLine)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1 lg:min-w-0">
+          <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">${e(card.summaryTitle || (locale === "en" ? "Diagnosis" : "진단명"))}</p>
+          <p class="text-sm font-semibold text-on-surface lg:truncate">${e(card.summary)}</p>
+        </div>
+        <div class="grid grid-cols-3 gap-2 sm:gap-4 lg:w-[260px] bg-surface-container-lowest/60 p-3 rounded-xl shrink-0">
+          <div class="text-center"><p class="text-[9px] text-slate-500 font-bold font-label">혈압</p><p class="text-sm font-black text-on-surface font-label">${e(card.bp)}</p></div>
+          <div class="text-center"><p class="text-[9px] text-slate-500 font-bold font-label">맥박</p><p class="text-sm font-black ${card.hrTone || "text-primary"} font-label">${e(card.hr)}</p></div>
+          <div class="text-center"><p class="text-[9px] text-slate-500 font-bold font-label">SpO2</p><p class="text-sm font-black ${card.spo2Tone || "text-on-surface"} font-label">${e(card.spo2)}</p></div>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-3 lg:w-[330px] shrink-0 justify-end">
+          <div class="w-full sm:w-auto flex justify-center">${statusPill(card.status, locale)}</div>
+          <div class="flex gap-2 w-full sm:w-auto">
+            ${card.secondaryAction ? `<button class="h-10 min-w-[104px] flex-1 sm:flex-none bg-surface-container-highest text-on-surface-variant px-3 rounded-xl text-[11px] font-bold hover:bg-slate-200 transition-colors whitespace-nowrap" data-action="${card.secondaryAction.action}" ${card.secondaryAction.target ? `data-target="${card.secondaryAction.target}"` : ""}>${e(card.secondaryAction.label)}</button>` : ""}
+            <button class="h-10 min-w-[104px] flex-1 sm:flex-none ${card.primaryAction.tone || "bg-primary text-white"} px-3 rounded-xl text-[11px] font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap" data-action="${card.primaryAction.action}" ${card.primaryAction.target ? `data-target="${card.primaryAction.target}"` : ""}>
+              <span class="material-symbols-outlined text-sm">${e(card.primaryAction.icon)}</span>${e(card.primaryAction.label)}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  ui.worklistView = function worklistView(vm) {
+    const e = vm.e;
+    const context = vm.dashboardContext;
+    return `<div class="screen-fade bg-background min-h-screen flex">
+      ${sideNav("worklist", e)}
+      <div class="flex-1 flex flex-col min-w-0 md:ml-64">
+        ${topBar(vm, vm.locale === "en" ? "Search patient name or ID" : "환자 이름 또는 등록번호 검색")}
+        <main class="flex-1 pt-28 md:pt-32 pb-24 md:pb-8 px-4 sm:px-6 lg:px-8">
+          <div class="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 max-w-[1400px] mx-auto">
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight mb-1">${vm.locale === "en" ? "Worklist" : "환자 명단"}</h2>
+              <p class="text-on-surface-variant text-sm font-label">${e(context.wardName)} · ${e(context.departmentLabel)} | ${e(vm.patient.admissionDate)}</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="bg-surface-container-high text-on-surface px-4 py-2 rounded-xl text-xs font-bold hover:bg-surface-container-highest transition-colors flex items-center gap-2" data-action="goto" data-target="dashboard">
+                <span class="material-symbols-outlined text-sm">dashboard</span>${vm.locale === "en" ? "Dashboard" : "대시보드"}
+              </button>
+              <button class="bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-colors flex items-center gap-2" data-action="goto" data-target="emr">
+                <span class="material-symbols-outlined text-sm">add</span>${vm.locale === "en" ? "New Simulation" : "새 시뮬레이션"}
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 gap-4 max-w-[1400px] mx-auto">
+            ${vm.worklistCards.map(function (card) { return worklistCard(card, e, vm.locale); }).join("")}
+          </div>
+        </main>
+        ${qa(vm)}
+      </div>
+    </div>`;
+  };
+
+  ui.dashboardView = function dashboardView(vm) {
+    const e = vm.e;
+    const context = vm.dashboardContext;
+    const teamAvatars = [
+      assets.clinicianAvatar || assets.worklistPatientA,
+      assets.worklistPatientA,
+      assets.worklistPatientB
+    ];
+    const timelineTimes = ["07:00", "08:30", "10:30", "13:00", "15:30", "18:00"];
+    return `<div class="screen-fade bg-background min-h-screen flex">
+      ${sideNav("dashboard", e)}
+      <div class="flex-1 flex flex-col min-w-0 md:ml-64">
+        ${topBar(vm, vm.locale === "en" ? "Search patients or tasks" : "환자 또는 작업 검색")}
+        <main class="flex-1 overflow-y-auto bg-surface p-6 md:p-8 pt-28 md:pt-32">
+          <div class="max-w-7xl mx-auto">
+            <div class="mb-6 flex flex-wrap items-center gap-6 text-sm font-semibold text-slate-500">
+              <span class="text-blue-700">${e(context.wardName)} ${vm.locale === "en" ? "dashboard" : "대시보드"}</span>
+              ${vm.flowNav.map(function (item) {
+                return `<button class="${item.id === "dashboard" ? "text-blue-700" : "text-slate-500 hover:text-blue-600"}" data-action="goto" data-target="${item.target}">${e(item.label)}</button>`;
+              }).join("")}
+            </div>
+
+            <div class="mb-8 flex justify-between items-end gap-6 flex-wrap">
+              <div>
+                <nav class="flex text-xs text-on-surface-variant font-label mb-2 uppercase tracking-widest">${e(context.unitCode)}</nav>
+                <h1 class="text-3xl font-black text-on-surface font-headline tracking-tight">${e(context.workflowTitle)}</h1>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="flex -space-x-2">
+                  ${teamAvatars.map(function (avatar, index) {
+                    return `<img alt="team" class="w-8 h-8 rounded-full border-2 border-surface object-cover ${index === 0 ? "ring-2 ring-emerald-100" : ""}" src="${avatar}">`;
+                  }).join("")}
+                  <div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container-high flex items-center justify-center text-[10px] font-bold">+4</div>
+                </div>
+                <div class="h-10 w-px bg-outline-variant/30 mx-1"></div>
+                <div class="text-right">
+                  <p class="text-xs font-label text-on-surface-variant">${vm.locale === "en" ? "Current time" : "현재 시각"}</p>
+                  <p class="text-sm font-bold font-headline">${e(context.lastUpdated)}</p>
+                </div>
+              </div>
+            </div>
+
+            <section class="dashboard-board mb-8 bg-surface-container-low rounded-3xl p-6 relative overflow-hidden border border-slate-200">
+              <div class="dashboard-board__blob"></div>
+              <div class="flex items-center justify-between mb-6 gap-4 flex-wrap relative z-[1]">
+                <h3 class="font-headline font-bold text-primary flex items-center gap-2">
+                  <span class="material-symbols-outlined">schedule</span>${e(context.shiftLabel)}
+                </h3>
+                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1.5 text-xs font-bold">
+                  <span class="dashboard-live-dot"></span>${e(context.liveSummary)} ${context.progressPercent}%
+                </span>
+              </div>
+              <div class="relative flex items-center justify-between gap-3 pt-1">
+                <div class="absolute left-0 right-0 top-5 h-0.5 bg-outline-variant/30 rounded-full"></div>
+                <div class="absolute left-0 top-5 h-0.5 bg-primary timeline-progress-line rounded-full" style="width:${context.progressPercent}%"></div>
+                ${context.timeline.map(function (label, index) {
+                  const active = index < 4;
+                  return `<div class="relative z-[1] flex flex-col items-center gap-3 flex-1">
+                    <div class="w-4 h-4 rounded-full ${active ? "bg-primary ring-4 ring-primary-fixed" : "bg-slate-300 ring-4 ring-slate-100"}"></div>
+                    <div class="text-center">
+                      <p class="text-[10px] font-label text-on-surface-variant">${timelineTimes[index] || "--:--"}</p>
+                      <p class="text-xs font-bold ${active ? "text-on-surface" : "text-slate-500"}">${e(label)}</p>
+                    </div>
+                  </div>`;
+                }).join("")}
+              </div>
+            </section>
+
+            <div class="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr_0.9fr] gap-6">
+              <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  ${context.metrics.map(function (metric, index) {
+                    return `<div class="dashboard-card-lift rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+                      <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-400">${e(metric.label)}</p>
+                      <p class="mt-3 text-3xl font-black ${metric.tone}">${e(metric.value)}</p>
+                      <p class="mt-2 text-xs text-slate-500">${e(metric.detail)}</p>
+                      <div class="mt-3 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                        <div class="h-full ${index === 1 ? "bg-emerald-500" : index === 2 ? "bg-amber-400" : "bg-blue-600"} rounded-full" style="width:${Math.max(28, Math.min(100, index === 0 ? 88 : index === 1 ? 62 : 54))}%"></div>
+                      </div>
+                    </div>`;
+                  }).join("")}
+                </div>
+                <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+                  <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base font-black text-slate-900">${vm.locale === "en" ? "Ward notices and handoff" : "병동 공지 및 전달"}</h2>
+                    <span class="text-xs font-bold text-blue-700">${e(context.departmentLabel)}</span>
+                  </div>
+                  <div class="space-y-3">
+                    ${context.notices.map(function (notice) {
+                      return `<div class="rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-sm text-slate-700">${e(notice)}</div>`;
+                    }).join("")}
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+                  <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base font-black text-slate-900">${vm.locale === "en" ? "Shift checklist" : "교대 전달 체크리스트"}</h2>
+                    <span class="text-xs font-bold text-slate-400">${e(context.departmentLabel)}</span>
+                  </div>
+                  <div class="space-y-3">
+                    ${context.checklist.map(function (item, index) {
+                      return `<label class="flex items-start gap-3 rounded-xl border border-slate-200 px-4 py-3 bg-slate-50">
+                        <input type="checkbox" class="mt-0.5 rounded border-slate-300 text-blue-700 focus:ring-blue-200" ${index === 0 ? "checked" : ""}/>
+                        <span class="text-sm text-slate-700">${e(item)}</span>
+                      </label>`;
+                    }).join("")}
+                  </div>
+                </div>
+                <div class="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm">
+                  <h2 class="text-base font-black text-slate-900 mb-4">${vm.locale === "en" ? "Focused watch list" : "집중 관찰 대상"}</h2>
+                  <div class="space-y-3">
+                    ${context.alerts.map(function (alert) {
+                      return `<div class="rounded-xl border ${alert.level === "high" ? "border-red-200 bg-red-50" : "border-amber-200 bg-amber-50"} px-4 py-3">
+                        <div class="flex items-center justify-between gap-4">
+                          <div>
+                            <p class="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">${e(alert.room)}</p>
+                            <p class="mt-1 text-sm font-semibold text-slate-800">${e(alert.item)}</p>
+                          </div>
+                          <span class="text-xs font-bold ${alert.level === "high" ? "text-red-600" : "text-amber-700"}">${e(alert.level)}</span>
+                        </div>
+                      </div>`;
+                    }).join("")}
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="rounded-3xl bg-slate-900 text-white p-6 shadow-xl dashboard-status-card">
+                  <p class="text-[11px] font-bold uppercase tracking-[0.24em] text-slate-400">SHIFT WARD STATUS</p>
+                  <div class="mt-6 flex items-end justify-between">
+                    <div>
+                      <p class="text-5xl font-black">${e(context.status.occupied)}</p>
+                      <p class="mt-2 text-xs text-slate-400">${e(context.status.subtitle)}</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xs text-slate-400">${vm.locale === "en" ? "Current time" : "현재 시각"}</p>
+                      <p class="text-lg font-bold">${e(context.lastUpdated)}</p>
+                    </div>
+                  </div>
+                  <div class="dashboard-wave mt-5">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="space-y-3">
+                  ${context.statusCards.concat(context.signalCards).slice(0, 4).map(function (card) {
+                    return `<div class="dashboard-card-lift rounded-2xl bg-white border border-slate-200 p-4 flex items-center justify-between">
+                      <div>
+                        <p class="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-400">${e(card.label)}</p>
+                        <p class="mt-1 text-lg font-black text-slate-900">${e(card.value)}</p>
+                      </div>
+                      <span class="material-symbols-outlined text-blue-700">insights</span>
+                    </div>`;
+                  }).join("")}
+                </div>
+                <button class="w-full rounded-2xl bg-blue-700 text-white py-4 font-bold hover:bg-blue-800 transition-colors" data-action="goto" data-target="worklist">
+                  ${vm.locale === "en" ? "Open worklist" : "환자 명단 열기"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+        ${qa(vm)}
+      </div>
+    </div>`;
+  };
+  function worklistCard(card, e, locale) {
+    return `<div class="bg-surface-container-low rounded-2xl p-4 sm:p-5 hover:bg-surface-container transition-colors group ${card.emphasis || ""}">
+      <div class="flex flex-col xl:flex-row xl:items-center gap-4 xl:gap-5">
+        <div class="flex items-center gap-4 xl:w-[248px] shrink-0">
+          <img alt="Patient Avatar" class="w-12 h-12 rounded-full object-cover shrink-0 ${card.imageTone || ""}" src="${card.image}">
+          <div class="min-w-0">
+            <h3 class="text-lg font-bold text-on-surface leading-tight truncate">${e(card.name)}</h3>
+            <div class="flex items-center flex-wrap gap-2 text-xs text-on-surface-variant font-label mt-1">
+              <span class="bg-primary-fixed px-2 py-0.5 rounded text-on-primary-fixed-variant font-bold">${e(card.room)}</span>
+              <span>${e(card.meta)}</span>
+              <span class="hidden sm:inline">${e(card.idLine)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0 rounded-xl bg-white/85 border border-slate-200 px-4 py-3">
+          <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">${e(card.summaryTitle || (locale === "en" ? "Diagnosis" : "진단명"))}</p>
+          <p class="text-sm font-semibold text-on-surface leading-6 break-words">${e(card.summary)}</p>
+        </div>
+        <div class="grid grid-cols-3 gap-2 sm:gap-4 xl:w-[220px] bg-surface-container-lowest/60 p-3 rounded-xl shrink-0">
+          <div class="text-center"><p class="text-[9px] text-slate-500 font-bold font-label">혈압</p><p class="text-sm font-black text-on-surface font-label">${e(card.bp)}</p></div>
+          <div class="text-center"><p class="text-[9px] text-slate-500 font-bold font-label">맥박</p><p class="text-sm font-black ${card.hrTone || "text-primary"} font-label">${e(card.hr)}</p></div>
+          <div class="text-center"><p class="text-[9px] text-slate-500 font-bold font-label">SpO2</p><p class="text-sm font-black ${card.spo2Tone || "text-on-surface"} font-label">${e(card.spo2)}</p></div>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-3 xl:w-[252px] shrink-0 justify-end">
+          <div class="w-full sm:w-auto flex justify-center">${statusPill(card.status, locale)}</div>
+          <div class="flex gap-2 w-full sm:w-auto sm:justify-end">
+            ${card.secondaryAction ? `<button class="h-10 min-w-[104px] flex-1 sm:flex-none bg-surface-container-highest text-on-surface-variant px-3 rounded-xl text-[11px] font-bold hover:bg-slate-200 transition-colors whitespace-nowrap" data-action="${card.secondaryAction.action}" ${card.secondaryAction.target ? `data-target="${card.secondaryAction.target}"` : ""}>${e(card.secondaryAction.label)}</button>` : ""}
+            <button class="h-10 min-w-[104px] flex-1 sm:flex-none ${card.primaryAction.tone || "bg-primary text-white"} px-3 rounded-xl text-[11px] font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap" data-action="${card.primaryAction.action}" ${card.primaryAction.target ? `data-target="${card.primaryAction.target}"` : ""}>
+              <span class="material-symbols-outlined text-sm">${e(card.primaryAction.icon)}</span>${e(card.primaryAction.label)}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  ui.worklistView = function worklistView(vm) {
+    const e = vm.e;
+    const context = vm.dashboardContext;
+    return `<div class="screen-fade bg-background min-h-screen flex">
+      ${sideNav("worklist", e)}
+      <div class="flex-1 flex flex-col min-w-0 md:ml-64">
+        ${topBar(vm, vm.locale === "en" ? "Search patient name or ID" : "환자 이름 또는 등록번호 검색")}
+        <main class="flex-1 pt-28 md:pt-32 pb-24 md:pb-8 px-4 sm:px-6 lg:px-8">
+          <div class="mb-8 flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 max-w-[1400px] mx-auto">
+            <div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight mb-1">${vm.locale === "en" ? "Worklist" : "환자명단"}</h2>
+              <p class="text-on-surface-variant text-sm font-label">${e(context.wardName)} · ${e(context.departmentLabel)} | ${e(vm.patient.admissionDate)}</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="bg-surface-container-high text-on-surface px-4 py-2 rounded-xl text-xs font-bold hover:bg-surface-container-highest transition-colors flex items-center gap-2" data-action="goto" data-target="dashboard">
+                <span class="material-symbols-outlined text-sm">dashboard</span>${vm.locale === "en" ? "Dashboard" : "대시보드"}
+              </button>
+              <button class="bg-primary text-white px-4 py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-colors flex items-center gap-2" data-action="goto" data-target="emr">
+                <span class="material-symbols-outlined text-sm">add</span>${vm.locale === "en" ? "New Simulation" : "새 시뮬레이션"}
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 gap-4 max-w-[1400px] mx-auto">
+            ${vm.worklistCards.map(function (card) { return worklistCard(card, e, vm.locale); }).join("")}
+          </div>
+        </main>
+        ${qa(vm)}
+      </div>
+    </div>`;
+  };
 })(typeof globalThis !== "undefined" ? globalThis : this);

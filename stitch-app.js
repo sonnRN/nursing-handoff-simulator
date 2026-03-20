@@ -59,6 +59,48 @@
     { id: "neurosurgery", icon: "neurology", label: { ko: "신경외과", en: "Neurosurgery" } },
     { id: "pediatrics", icon: "child_care", label: { ko: "소아과", en: "Pediatrics" } }
   ];
+  const PATCH_NOTES = [
+    {
+      version: "v0.4.1",
+      date: "2026-03-20",
+      title: {
+        ko: "제4병동 현황판 정렬 및 패치노트 센터",
+        en: "Ward board alignment and patch notes center"
+      },
+      items: {
+        ko: [
+          "메인 랜딩 상단에 패치노트 메뉴와 사용자용 요약 모달을 추가했습니다.",
+          "Stitch 기준 제4병동 현황판에 더 가깝도록 운영 타임라인, 라이브 상태, 미세 애니메이션을 보강했습니다.",
+          "환자명단 카드의 진단명 표기와 액션 버튼 폭을 통일했습니다."
+        ],
+        en: [
+          "Added a patch notes menu and a concise release modal to the landing page.",
+          "Aligned the Ward 4 status board more closely with Stitch using a live timeline and subtle operational motion.",
+          "Standardized diagnosis labels and action button widths in the worklist."
+        ]
+      }
+    },
+    {
+      version: "v0.4.0",
+      date: "2026-03-20",
+      title: {
+        ko: "병동 선택 기반 대시보드 컨텍스트",
+        en: "Ward-aware dashboard context"
+      },
+      items: {
+        ko: [
+          "병동 및 진료과 선택값이 대시보드와 시뮬레이션 문맥에 반영되도록 연결했습니다.",
+          "일반 병동과 중환자실에 따라 진료과 노출 규칙을 분리했습니다.",
+          "좌측 프로세스 메뉴를 대시보드, 환자명단, 시뮬레이션 훈련, 학습 기록 순서로 정리했습니다."
+        ],
+        en: [
+          "Connected ward and department selections to the dashboard and session context.",
+          "Separated department visibility rules for general wards and ICU selection.",
+          "Aligned the left process menu to Dashboard, Worklist, Simulation Training, and Learning Records."
+        ]
+      }
+    }
+  ];
   const COPY = {
     ko: {
       handoffTitle: "간호 인수인계",
@@ -97,7 +139,14 @@
       themeLight: "밝음",
       themeDark: "어두움",
       languageKo: "KR",
-      languageEn: "EN"
+      languageEn: "EN",
+      patchNotesMenu: "패치노트",
+      patchNotesTitle: "최근 업데이트",
+      patchNotesSubtitle: "사용자가 바로 확인해야 하는 변경만 짧게 정리했습니다.",
+      patchNotesClose: "닫기",
+      worklistDiagnosisLabel: "진단명",
+      worklistPrimaryAction: "열기",
+      worklistSecondaryAction: "EMR 조회"
     },
     en: {
       handoffTitle: "Nursing Handoff",
@@ -136,7 +185,14 @@
       themeLight: "Light",
       themeDark: "Dark",
       languageKo: "KR",
-      languageEn: "EN"
+      languageEn: "EN",
+      patchNotesMenu: "Patch Notes",
+      patchNotesTitle: "Latest updates",
+      patchNotesSubtitle: "Only the user-facing changes that matter right now.",
+      patchNotesClose: "Close",
+      worklistDiagnosisLabel: "Diagnosis",
+      worklistPrimaryAction: "Open",
+      worklistSecondaryAction: "Open EMR"
     }
   };
 
@@ -161,6 +217,7 @@
       recordingMessage: "Review the chart, identify the unstable problems, and organize the handoff before you start speaking.",
       followUp: { opening: "", questions: [], answers: [] },
       answerDraft: "",
+      patchNotesOpen: false,
       feedback: null,
       sessionHistory: seedHistory(),
       lastHistoryId: null
@@ -503,6 +560,92 @@
     ];
   }
 
+  function getWorklistCards() {
+    const day = currentDay();
+    const latest = latestHistoryEntry();
+    const status = currentSessionStatus().label;
+    const diagnoses = app.scenario.patient.problemList || [];
+    const summaryLabel = t("worklistDiagnosisLabel");
+    const primaryLabel = t("worklistPrimaryAction");
+    const secondaryLabel = t("worklistSecondaryAction");
+    return [
+      {
+        name: app.scenario.patient.name,
+        room: app.scenario.patient.room,
+        meta: app.scenario.patient.gender + " / " + app.scenario.patient.age + "Y",
+        idLine: "#" + app.scenario.patient.mrn,
+        summaryTitle: summaryLabel,
+        summary: diagnoses[0] || app.scenario.patient.admissionReason,
+        bp: day.vital.bp,
+        hr: String(day.vital.hr) + " bpm",
+        spo2: String(day.vital.spo2) + "%",
+        status: status,
+        image: (window.StitchUi && window.StitchUi.assets && window.StitchUi.assets.patientPortrait) || "",
+        primaryAction: {
+          action: "goto",
+          target: status === "Completed" ? "feedback" : "emr",
+          icon: status === "Completed" ? "visibility" : "play_arrow",
+          label: primaryLabel
+        },
+        secondaryAction: {
+          action: "goto",
+          target: "emr",
+          label: secondaryLabel
+        }
+      },
+      {
+        name: app.scenario.patient.name,
+        room: "Current Session",
+        meta: "Simulation Flow",
+        idLine: "Step " + simulationProgress(app.state.step).index + " / " + simulationProgress(app.state.step).count,
+        summaryTitle: summaryLabel,
+        summary: diagnoses[1] || diagnoses[0] || app.scenario.patient.admissionReason,
+        bp: day.vital.bp,
+        hr: String(day.vital.hr) + " bpm",
+        spo2: String(day.vital.spo2) + "%",
+        status: status === "Completed" ? "In Progress" : status,
+        image: (window.StitchUi && window.StitchUi.assets && window.StitchUi.assets.worklistPatientB) || "",
+        emphasis: "border-l-4 border-primary",
+        primaryAction: {
+          action: "goto",
+          target: status === "In Progress" ? app.state.step : "record",
+          icon: status === "In Progress" ? "resume" : "mic",
+          label: primaryLabel
+        },
+        secondaryAction: {
+          action: "goto",
+          target: "emr",
+          label: secondaryLabel
+        }
+      },
+      {
+        name: app.scenario.patient.name,
+        room: "Last Report",
+        meta: "Most recent scored attempt",
+        idLine: latest ? latest.dateLabel : "No report yet",
+        summaryTitle: summaryLabel,
+        summary: diagnoses[2] || diagnoses[0] || app.scenario.patient.admissionReason,
+        bp: latest ? latest.score + "/100" : "--",
+        hr: latest ? latest.duration : "--",
+        spo2: latest ? "Ready" : "--",
+        status: "Completed",
+        image: (window.StitchUi && window.StitchUi.assets && window.StitchUi.assets.worklistPatientC) || "",
+        imageTone: latest ? "grayscale" : "",
+        primaryAction: {
+          action: "goto",
+          target: app.state.feedback ? "feedback" : "records",
+          icon: app.state.feedback ? "visibility" : "school",
+          label: primaryLabel
+        },
+        secondaryAction: {
+          action: "goto",
+          target: "emr",
+          label: secondaryLabel
+        }
+      }
+    ];
+  }
+
   function render() {
     const root = document.getElementById("appRoot");
     if (!root) return;
@@ -532,6 +675,9 @@
 
     if (step === "landing") {
       root.insertAdjacentHTML("beforeend", renderGlobalControls(vm));
+    }
+    if (app.state.patchNotesOpen && typeof ui.patchNotesOverlay === "function") {
+      root.insertAdjacentHTML("beforeend", ui.patchNotesOverlay(vm));
     }
     decorateRenderedView(step, root);
 
@@ -637,6 +783,9 @@
       selector: selection,
       dashboardContext: dashboardContext,
       flowNav: flowNavigation(),
+      patchNotes: localizedPatchNotes(),
+      patchNotesOpen: app.state.patchNotesOpen,
+      latestPatchNote: localizedPatchNotes()[0],
       selectedDate: app.state.selectedDate,
       dates: timelineDates(),
       emrTab: app.state.emrTab,
@@ -800,6 +949,7 @@
       const icon = node.querySelector(".material-symbols-outlined");
       const iconName = icon ? icon.textContent.trim() : "";
       if (target === "landing" && iconName === "restart_alt") return restartSimulation();
+      app.state.patchNotesOpen = false;
       if (target === "dashboard" && app.state.step === "landing" && !node.closest(".qa-shell")) {
         return setStep("selector");
       }
@@ -808,6 +958,14 @@
         return;
       }
       return setStep(target);
+    }
+    if (action === "open-patch-notes") {
+      app.state.patchNotesOpen = true;
+      return render();
+    }
+    if (action === "close-patch-notes") {
+      app.state.patchNotesOpen = false;
+      return render();
     }
     if (action === "set-theme") return setTheme(node.getAttribute("data-theme"));
     if (action === "set-locale") return setLocale(node.getAttribute("data-locale"));
@@ -865,6 +1023,7 @@
   function setStep(step) {
     const nextStep = resolveStep(step);
     app.state.step = nextStep;
+    app.state.patchNotesOpen = false;
     if (nextStep === "record" && app.state.recordingStatus === "idle") {
       app.state.recordingMessage = "Review the chart, then speak the handoff in SBAR order with the unstable issues first.";
     }
@@ -1075,6 +1234,7 @@
     app.state.recordingMessage = "Review the chart, identify the unstable problems, and organize the handoff before you start speaking.";
     app.state.followUp = { opening: "", questions: [], answers: [] };
     app.state.answerDraft = "";
+    app.state.patchNotesOpen = false;
     app.state.feedback = null;
     setStep("landing");
   }
@@ -1291,6 +1451,17 @@
     ];
   }
 
+  function localizedPatchNotes() {
+    return PATCH_NOTES.map(function mapPatch(note) {
+      return {
+        version: note.version,
+        date: note.date,
+        title: note.title[app.state.locale] || note.title.ko,
+        items: note.items[app.state.locale] || note.items.ko
+      };
+    });
+  }
+
   function buildDashboardContext(selection) {
     const wardType = selection.wardType || "general";
     const department = selection.department || "internal";
@@ -1450,6 +1621,24 @@
     const wardProfile = profileMap[wardType] || profileMap.general;
     const profile = wardProfile[department] || fallback;
     const departmentLabel = optionLabel(DEPARTMENT_OPTIONS, department);
+    const progressPercent = wardType === "icu" ? 68 : (department === "surgery" ? 71 : 75);
+    const liveSummary = wardType === "icu"
+      ? (locale === "en" ? "Critical care load stable" : "고위험 감시 유지")
+      : (locale === "en" ? "Ward operations stable" : "제4병동 운영 정상");
+    const signalCards = [
+      {
+        label: locale === "en" ? "Pending discharge" : "퇴원 대기",
+        value: wardType === "icu" ? "0" : "2"
+      },
+      {
+        label: locale === "en" ? "Transport delays" : "이송 지연",
+        value: department === "surgery" ? "2" : "1"
+      },
+      {
+        label: locale === "en" ? "Escalation watch" : "에스컬레이션",
+        value: wardType === "icu" ? "3" : "2"
+      }
+    ];
 
     return {
       wardType: wardType,
@@ -1466,7 +1655,11 @@
       alerts: profile.alerts,
       status: profile.status,
       statusCards: profile.statusCards,
-      timeline: profile.timeline
+      timeline: profile.timeline,
+      progressPercent: progressPercent,
+      liveSummary: liveSummary,
+      lastUpdated: "14:24 PM",
+      signalCards: signalCards
     };
   }
 
