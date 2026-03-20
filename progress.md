@@ -162,3 +162,17 @@ Original prompt: [$develop-web-game](C:\\Users\\gse06\\.codex\\skills\\develop-w
   - `node tests/simulation-api-smoke.js`
   - `npm run test:browser:stitch-ui`
   - direct Playwright check confirming left-rail navigation reaches `dashboard`, `worklist`, and `records` from the simulation screen.
+
+## Ward selector, theme, and locale update
+
+- Pulled the new Stitch screen `병동 및 진료과 선택 화면` (`ffe457053d1c4f48bd8327817311127f`) via Stitch MCP and used it as the new pre-dashboard entry screen.
+- Added `stitch-ui-selector.js` and a new `selector` app step.
+- Wired landing CTAs so the learner now enters the new selector screen before the dashboard while keeping the existing simulation state machine intact.
+- Added ward-type / department selection state without changing the single-case simulation data model.
+- Added landing-only theme and language controls so the user can choose light/dark mode and Korean/English before starting; the selected mode persists into the rest of the session.
+- Moved the QA hover shell away from the left footer and made the shell itself non-blocking so the landing and reset controls remain clickable.
+- Updated browser validation to capture the new selector screen in addition to landing, dashboard, worklist, EMR, records, and demo feedback.
+- Revalidated:
+  - `node tests/http-server-smoke.js`
+  - `node tests/simulation-api-smoke.js`
+  - `npm run test:browser:stitch-ui`

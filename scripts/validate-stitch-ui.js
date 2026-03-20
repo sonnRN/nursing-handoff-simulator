@@ -12,29 +12,40 @@ const RUNS = [
     pauseMs: 400
   },
   {
+    name: "selector",
+    clickSelector: "main > section:first-of-type button[data-action='goto'][data-target='dashboard']",
+    pauseMs: 400,
+    useQa: false
+  },
+  {
     name: "dashboard",
     clickSelector: "button[data-action='goto'][data-target='dashboard']",
-    pauseMs: 400
+    pauseMs: 400,
+    useQa: true
   },
   {
     name: "worklist",
     clickSelector: "button[data-action='goto'][data-target='worklist']",
-    pauseMs: 400
+    pauseMs: 400,
+    useQa: true
   },
   {
     name: "emr",
     clickSelector: "button[data-action='goto'][data-target='emr']",
-    pauseMs: 400
+    pauseMs: 400,
+    useQa: true
   },
   {
     name: "records",
     clickSelector: "button[data-action='goto'][data-target='records']",
-    pauseMs: 400
+    pauseMs: 400,
+    useQa: true
   },
   {
     name: "demo-feedback",
     clickSelector: "button[data-action='run-demo-session']",
-    pauseMs: 5200
+    pauseMs: 5200,
+    useQa: true
   }
 ];
 
@@ -58,10 +69,14 @@ async function captureRun(browser, port, run) {
   await page.waitForTimeout(500);
 
   if (run.clickSelector) {
-    await page.hover(".qa-trigger");
-    await page.waitForTimeout(150);
+    if (run.useQa) {
+      await page.hover(".qa-trigger");
+      await page.waitForTimeout(150);
+    }
     await page.click(run.clickSelector, { timeout: 5000 });
-    await page.mouse.move(1200, 40);
+    if (run.useQa) {
+      await page.mouse.move(1200, 40);
+    }
   }
 
   await page.waitForTimeout(run.pauseMs);

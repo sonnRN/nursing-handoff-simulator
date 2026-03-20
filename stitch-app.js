@@ -29,6 +29,116 @@
       focus: "Needed tighter explanation of antibiotic reassessment and discharge hold."
     }
   ];
+  const THEME_STORAGE_KEY = "digital-clinician-theme";
+  const LOCALE_STORAGE_KEY = "digital-clinician-locale";
+  const DEFAULT_SELECTION = { wardType: "general", department: "internal" };
+  const WARD_OPTIONS = [
+    {
+      id: "general",
+      icon: "bed",
+      label: { ko: "일반 병동", en: "General Ward" },
+      description: {
+        ko: "표준 병동 인수인계 흐름과 다직종 조율에 집중합니다.",
+        en: "Focuses on standard inpatient handoff flow and cross-team coordination."
+      }
+    },
+    {
+      id: "icu",
+      icon: "monitor_heart",
+      label: { ko: "중환자실", en: "ICU" },
+      description: {
+        ko: "고위험 감시와 즉시 에스컬레이션 관점을 강조합니다.",
+        en: "Emphasizes high-acuity monitoring and rapid escalation."
+      }
+    }
+  ];
+  const DEPARTMENT_OPTIONS = [
+    { id: "internal", icon: "local_hospital", label: { ko: "내과", en: "Internal Medicine" } },
+    { id: "surgery", icon: "medical_services", label: { ko: "외과", en: "Surgery" } },
+    { id: "orthopedics", icon: "orthopedics", label: { ko: "정형외과", en: "Orthopedics" } },
+    { id: "neurosurgery", icon: "neurology", label: { ko: "신경외과", en: "Neurosurgery" } },
+    { id: "pediatrics", icon: "child_care", label: { ko: "소아과", en: "Pediatrics" } }
+  ];
+  const COPY = {
+    ko: {
+      handoffTitle: "간호 인수인계",
+      searchPrompt: "환자 기록 검색...",
+      startSimulation: "시뮬레이션 시작",
+      openChart: "차트 보기",
+      selectorKicker: "Simulation Setup",
+      selectorTitle: "병동 및 진료과 선택",
+      selectorSubtitle: "시뮬레이션 시작 전, 현재 세션에 적용할 병동 유형과 진료과를 선택하세요.",
+      selectorStatusLabel: "Current configuration",
+      selectorStatusCopy: "선택값은 대시보드와 시뮬레이션 세션에 즉시 반영됩니다.",
+      selectorWardEyebrow: "Ward Type",
+      selectorWardTitle: "병동 유형 선택",
+      selectorWardHint: "Choose one",
+      selectorDeptEyebrow: "Department",
+      selectorDeptTitle: "진료과 선택",
+      selectorDeptHint: "Required",
+      selectorSummaryTitle: "Selection Summary",
+      selectorMetricCase: "Current case",
+      selectorMetricOxygen: "Current oxygen",
+      selectorMetricPending: "Pending tasks",
+      selectorNote: "현재 MVP는 단일 텔레메트리 환자 케이스를 유지하면서 UI와 세션 컨텍스트만 업데이트합니다.",
+      selectorFooterSelection: "선택된 구성",
+      selectorFooterStatus: "세션 상태",
+      selectorFooterReady: "대시보드 진입 준비 완료",
+      enterDashboard: "대시보드 입장",
+      selected: "선택됨",
+      choose: "선택",
+      landingLabel: "랜딩",
+      dashboardLabel: "대시보드",
+      worklistLabel: "환자 명단",
+      unitSetupLabel: "병동 선택",
+      resetSessionLabel: "세션 초기화",
+      themeLabel: "테마",
+      languageLabel: "언어",
+      themeLight: "밝음",
+      themeDark: "어두움",
+      languageKo: "KR",
+      languageEn: "EN"
+    },
+    en: {
+      handoffTitle: "Nursing Handoff",
+      searchPrompt: "Search patient records...",
+      startSimulation: "Start Simulation",
+      openChart: "Open Chart",
+      selectorKicker: "Simulation Setup",
+      selectorTitle: "Choose Unit and Department",
+      selectorSubtitle: "Before you start, select the ward type and department context for this session.",
+      selectorStatusLabel: "Current configuration",
+      selectorStatusCopy: "Selections are applied immediately to the dashboard and session framing.",
+      selectorWardEyebrow: "Ward Type",
+      selectorWardTitle: "Select Ward Type",
+      selectorWardHint: "Choose one",
+      selectorDeptEyebrow: "Department",
+      selectorDeptTitle: "Select Department",
+      selectorDeptHint: "Required",
+      selectorSummaryTitle: "Selection Summary",
+      selectorMetricCase: "Current case",
+      selectorMetricOxygen: "Current oxygen",
+      selectorMetricPending: "Pending tasks",
+      selectorNote: "This MVP keeps the single telemetry case while updating the UI context for the selected care area.",
+      selectorFooterSelection: "Selected setup",
+      selectorFooterStatus: "Session status",
+      selectorFooterReady: "Ready to enter dashboard",
+      enterDashboard: "Enter Dashboard",
+      selected: "Selected",
+      choose: "Choose",
+      landingLabel: "Landing",
+      dashboardLabel: "Dashboard",
+      worklistLabel: "Worklist",
+      unitSetupLabel: "Unit Setup",
+      resetSessionLabel: "Reset session",
+      themeLabel: "Theme",
+      languageLabel: "Language",
+      themeLight: "Light",
+      themeDark: "Dark",
+      languageKo: "KR",
+      languageEn: "EN"
+    }
+  };
 
   const app = {
     scenario: null,
@@ -40,6 +150,9 @@
     },
     state: {
       step: "landing",
+      theme: "light",
+      locale: "ko",
+      selection: Object.assign({}, DEFAULT_SELECTION),
       selectedDate: "",
       emrTab: "overview",
       prepNotes: "",
@@ -66,6 +179,8 @@
 
   function init() {
     app.scenario = window.HANDOFF_SIM_DATA.getScenario();
+    loadPreferences();
+    applyPreferences();
     app.state.selectedDate = app.scenario.patient.currentDate;
     app.config.qaMode = window.location.hostname === "localhost" || window.location.search.includes("qa=1");
     document.addEventListener("click", onClick);
@@ -93,6 +208,55 @@
     app.config.qaMode = Boolean(payload.qaMode) || app.config.qaMode;
   }
 
+  function loadPreferences() {
+    app.state.theme = readPreference(THEME_STORAGE_KEY, ["light", "dark"], "light");
+    app.state.locale = readPreference(LOCALE_STORAGE_KEY, ["ko", "en"], "ko");
+  }
+
+  function readPreference(key, allowedValues, fallback) {
+    try {
+      const value = window.localStorage.getItem(key);
+      return allowedValues.includes(value) ? value : fallback;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function persistPreference(key, value) {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch (error) {
+      return null;
+    }
+    return value;
+  }
+
+  function applyPreferences() {
+    const isDark = app.state.theme === "dark";
+    document.documentElement.classList.toggle("dark", isDark);
+    document.documentElement.classList.toggle("light", !isDark);
+    document.documentElement.lang = app.state.locale;
+    if (document.body) {
+      document.body.classList.toggle("theme-dark", isDark);
+    }
+  }
+
+  function setTheme(theme) {
+    if (!["light", "dark"].includes(theme) || app.state.theme === theme) return;
+    app.state.theme = theme;
+    persistPreference(THEME_STORAGE_KEY, theme);
+    applyPreferences();
+    render();
+  }
+
+  function setLocale(locale) {
+    if (!["ko", "en"].includes(locale) || app.state.locale === locale) return;
+    app.state.locale = locale;
+    persistPreference(LOCALE_STORAGE_KEY, locale);
+    applyPreferences();
+    render();
+  }
+
   function api(path) {
     const base = window.AI_HANDOFF_RUNTIME_CONFIG && window.AI_HANDOFF_RUNTIME_CONFIG.apiBase
       ? String(window.AI_HANDOFF_RUNTIME_CONFIG.apiBase).replace(/\/$/, "")
@@ -115,6 +279,47 @@
 
   function latestShift() {
     return app.scenario.shiftHistory[app.scenario.shiftHistory.length - 1];
+  }
+
+  function t(key) {
+    const pack = COPY[app.state.locale] || COPY.ko;
+    return pack[key] || COPY.ko[key] || key;
+  }
+
+  function optionLabel(options, selectedId) {
+    const match = options.find(function findOption(option) {
+      return option.id === selectedId;
+    }) || options[0];
+    return match.label[app.state.locale] || match.label.ko;
+  }
+
+  function selectionData() {
+    const wardLabel = optionLabel(WARD_OPTIONS, app.state.selection.wardType);
+    const departmentLabel = optionLabel(DEPARTMENT_OPTIONS, app.state.selection.department);
+    return {
+      wardType: app.state.selection.wardType,
+      department: app.state.selection.department,
+      wardLabel: wardLabel,
+      departmentLabel: departmentLabel,
+      summary: wardLabel + " / " + departmentLabel,
+      wardOptions: WARD_OPTIONS.map(function mapWard(option) {
+        return {
+          id: option.id,
+          icon: option.icon,
+          label: option.label[app.state.locale] || option.label.ko,
+          description: option.description[app.state.locale] || option.description.ko,
+          selectedLabel: t("selected"),
+          chooseLabel: t("choose")
+        };
+      }),
+      departmentOptions: DEPARTMENT_OPTIONS.map(function mapDepartment(option) {
+        return {
+          id: option.id,
+          icon: option.icon,
+          label: option.label[app.state.locale] || option.label.ko
+        };
+      })
+    };
   }
 
   function resolveStep(step) {
@@ -308,6 +513,8 @@
 
     if (step === "landing" && typeof ui.landingView === "function") {
       root.innerHTML = ui.landingView(vm);
+    } else if (step === "selector" && typeof ui.selectorView === "function") {
+      root.innerHTML = ui.selectorView(vm);
     } else if (step === "dashboard" && typeof ui.dashboardView === "function") {
       root.innerHTML = ui.dashboardView(vm);
     } else if (step === "worklist" && typeof ui.worklistView === "function") {
@@ -322,7 +529,76 @@
       root.innerHTML = "";
     }
 
+    if (step === "landing") {
+      root.insertAdjacentHTML("beforeend", renderGlobalControls(vm));
+    }
+    decorateRenderedView(step, root);
+
     syncHooks();
+  }
+
+  function renderGlobalControls(vm) {
+    return `<div class="global-dock" aria-label="Display controls">
+      <div class="global-dock__group">
+        <span class="global-dock__label">${vm.e(vm.t("themeLabel"))}</span>
+        <button type="button" class="global-dock__option ${vm.theme === "light" ? "is-active" : ""}" data-action="set-theme" data-theme="light">${vm.e(vm.t("themeLight"))}</button>
+        <button type="button" class="global-dock__option ${vm.theme === "dark" ? "is-active" : ""}" data-action="set-theme" data-theme="dark">${vm.e(vm.t("themeDark"))}</button>
+      </div>
+      <div class="global-dock__group">
+        <span class="global-dock__label">${vm.e(vm.t("languageLabel"))}</span>
+        <button type="button" class="global-dock__option ${vm.locale === "ko" ? "is-active" : ""}" data-action="set-locale" data-locale="ko">${vm.e(vm.t("languageKo"))}</button>
+        <button type="button" class="global-dock__option ${vm.locale === "en" ? "is-active" : ""}" data-action="set-locale" data-locale="en">${vm.e(vm.t("languageEn"))}</button>
+      </div>
+    </div>`;
+  }
+
+  function decorateRenderedView(step, root) {
+    if (step === "landing") {
+      decorateLanding(root);
+    }
+  }
+
+  function decorateLanding(root) {
+    const copy = app.state.locale === "en"
+      ? {
+          navCta: "Start Simulation",
+          heroTitle: "Hear the signal,\nHand off the change.",
+          heroBody: "Review a realistic inpatient chart, deliver a spoken nursing handoff, respond to focused receiver questions, and get structured AI feedback in one continuous training loop.",
+          heroCta: "Open Unit Setup",
+          processTitle: "Training flow",
+          processBody: "Chart review, verbal handoff, AI follow-up, and final report are connected as one premium simulation loop."
+        }
+      : {
+          navCta: "시뮬레이션 시작",
+          heroTitle: "변화를 포착하고,\n우선순위로 인계하세요.",
+          heroBody: "실제 EMR 흐름과 유사한 다일자 차트를 검토하고, 음성 간호 인수인계를 수행한 뒤, AI 수신자 질문과 구조화된 피드백까지 한 번에 경험합니다.",
+          heroCta: "병동 선택으로 이동",
+          processTitle: "학습 프로세스",
+          processBody: "차트 검토, 음성 인계, AI 후속 질문, 최종 리포트가 하나의 연속된 시뮬레이션으로 이어집니다."
+        };
+
+    const navButton = root.querySelector("nav button[data-action='goto'][data-target='dashboard']");
+    if (navButton && !navButton.closest(".qa-shell")) {
+      navButton.textContent = copy.navCta;
+    }
+
+    const heroTitle = root.querySelector("main > section:first-of-type h1");
+    if (heroTitle) {
+      const parts = copy.heroTitle.split("\n");
+      heroTitle.innerHTML = parts.map(escapeHtml).join("<br>");
+    }
+
+    const heroBody = root.querySelector("main > section:first-of-type p.text-lg");
+    if (heroBody) heroBody.textContent = copy.heroBody;
+
+    const heroButton = root.querySelector("main > section:first-of-type button[data-action='goto'][data-target='dashboard']");
+    if (heroButton) heroButton.textContent = copy.heroCta;
+
+    const processTitle = root.querySelector("main > section:nth-of-type(2) h2");
+    if (processTitle) processTitle.textContent = copy.processTitle;
+
+    const processBody = root.querySelector("main > section:nth-of-type(2) .text-on-surface-variant.max-w-2xl");
+    if (processBody) processBody.textContent = copy.processBody;
   }
 
   function simulationProgress(step) {
@@ -340,22 +616,30 @@
     const progress = simulationProgress(step);
     const dashboardMetrics = getDashboardMetrics();
     const recordsMetrics = getRecordsMetrics();
+    const selection = selectionData();
 
     return {
       e: escapeHtml,
+      t: t,
       step: step,
       stepLabel: stepLabel(step),
       stepIndex: progress.index,
       stepCount: progress.count,
+      theme: app.state.theme,
+      locale: app.state.locale,
       patient: app.scenario.patient,
       scenario: app.scenario,
       day: current,
       latestShift: latestShift(),
+      selection: selection,
+      selector: selection,
       selectedDate: app.state.selectedDate,
       dates: timelineDates(),
       emrTab: app.state.emrTab,
       qaMode: app.config.qaMode,
-      openAiText: app.config.openaiConfigured ? "OpenAI ready" : "Fallback mode",
+      openAiText: app.config.openaiConfigured
+        ? (app.state.locale === "en" ? "OpenAI ready" : "OpenAI 연결됨")
+        : (app.state.locale === "en" ? "Fallback mode" : "기본 모드"),
       analysisSummary: analysisSummary(current),
       recordingStatus: app.state.recordingStatus,
       recordingMessage: app.state.recordingMessage,
@@ -507,7 +791,26 @@
     if (!node) return;
 
     const action = node.getAttribute("data-action");
-    if (action === "goto") return setStep(node.getAttribute("data-target"));
+    if (action === "goto") {
+      const target = node.getAttribute("data-target");
+      const icon = node.querySelector(".material-symbols-outlined");
+      const iconName = icon ? icon.textContent.trim() : "";
+      if (target === "landing" && iconName === "restart_alt") return restartSimulation();
+      if (target === "dashboard" && app.state.step === "landing" && !node.closest(".qa-shell")) {
+        return setStep("selector");
+      }
+      return setStep(target);
+    }
+    if (action === "set-theme") return setTheme(node.getAttribute("data-theme"));
+    if (action === "set-locale") return setLocale(node.getAttribute("data-locale"));
+    if (action === "select-ward") {
+      app.state.selection.wardType = node.getAttribute("data-ward") || app.state.selection.wardType;
+      return render();
+    }
+    if (action === "select-department") {
+      app.state.selection.department = node.getAttribute("data-department") || app.state.selection.department;
+      return render();
+    }
     if (action === "select-date") {
       app.state.selectedDate = node.getAttribute("data-date");
       return render();
@@ -837,6 +1140,9 @@
     window.render_game_to_text = function renderGameToText() {
       return JSON.stringify({
         step: app.state.step,
+        theme: app.state.theme,
+        locale: app.state.locale,
+        selection: selectionData().summary,
         selectedDate: app.state.selectedDate,
         emrTab: app.state.emrTab,
         recordingStatus: app.state.recordingStatus,
@@ -872,6 +1178,37 @@
   function formatDelta(value) {
     const numeric = Number(value || 0);
     return (numeric >= 0 ? "+" : "") + numeric + "%";
+  }
+
+  function stepLabel(step) {
+    const labels = {
+      ko: {
+        landing: "랜딩",
+        selector: "병동 선택",
+        dashboard: "대시보드",
+        worklist: "환자 명단",
+        emr: "EMR 검토",
+        record: "음성 인계",
+        confirm: "전사 확인",
+        followup: "AI 후속 질문",
+        feedback: "결과 리포트",
+        records: "학습 기록"
+      },
+      en: {
+        landing: "Landing",
+        selector: "Unit Setup",
+        dashboard: "Dashboard",
+        worklist: "Worklist",
+        emr: "EMR Review",
+        record: "Handoff",
+        confirm: "Transcript",
+        followup: "AI Follow-up",
+        feedback: "Feedback",
+        records: "Records"
+      }
+    };
+    const localeLabels = labels[app.state.locale] || labels.ko;
+    return localeLabels[step] || step;
   }
 
   function durationLabel() {
