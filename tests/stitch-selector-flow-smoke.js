@@ -1,6 +1,6 @@
 const assert = require("assert");
 const { chromium } = require("playwright");
-const { startHttpServer } = require("../src/server/httpServer");
+const { startHttpServer } = require("../api-server/server/httpServer");
 
 async function openSelector(page, port) {
   await page.goto(`http://127.0.0.1:${port}/?qa=1`, { waitUntil: "domcontentloaded" });

@@ -1,4 +1,4 @@
-const { FhirMcpClient } = require("../src/mcp/client/fhirMcpClient");
+const { FhirMcpClient } = require("../backend/mcp/client/fhirMcpClient");
 
 async function main() {
   const client = new FhirMcpClient();

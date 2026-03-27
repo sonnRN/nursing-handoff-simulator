@@ -1,4 +1,4 @@
-const patientsMcpHandler = require("../src/server/handlers/patientsMcpApi.js").handler;
+const patientsMcpHandler = require("../api-server/handlers/patientsMcpApi.js").handler;
 
 async function main() {
   const listResponse = await patientsMcpHandler({

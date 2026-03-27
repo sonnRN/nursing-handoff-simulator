@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Clinician | 간호 인수인계 교육 프로그램</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-soft: #eef4fb;
+      --line: #d9e2ee;
+      --line-strong: #c7d4e5;
+      --text: #152335;
+      --text-soft: #607187;
+      --primary: #0e67d8;
+      --primary-strong: #084da9;
+      --primary-soft: #eaf2ff;
+      --mint: #10956f;
+      --mint-soft: #e8f8f1;
+      --amber: #f59e0b;
+      --amber-soft: #fff4dd;
+      --shadow: 0 22px 60px rgba(17, 36, 59, 0.08);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max-width: 1220px;
+      --dashboard-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBc7bdFyIpQHoFdT8Sm4NESvDyhDEcd0JK-I7tqMiPQykHv_i6NdUjpYD4w1i2Kgc3HFzMPiyBtb1wbyRnHxbOhlEtj03dssszs7PgX4Nk03E2n1cFuCuJE-qYnU6qXSFtxxfvX-zhE0kACKf9yxLIRlC8QAZ2Rr01_ATfD6zn6FYjcWzkVFX7FNoz9D_wcqOSnBtThpCLUe7MQ_z8JZ8aV8v7SbWchhCSB5RGyGtHMlyMPttl55WrXu4OaijGURJriQ8YMNYj6GmCo");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(14, 103, 216, 0.08), transparent 26%),
+        linear-gradient(180deg, #fbfdff 0%, var(--bg) 46%, #edf3fa 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(calc(100% - 28px), var(--max-width));
+      margin: 0 auto;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(12px);
+      background: rgba(251, 253, 255, 0.88);
+      border-bottom: 1px solid rgba(217, 226, 238, 0.78);
+    }
+
+    .header-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary-strong), var(--primary));
+      color: #fff;
+      font-weight: 800;
+      box-shadow: 0 14px 24px rgba(14, 103, 216, 0.18);
+    }
+
+    .brand-copy {
+      display: grid;
+      gap: 4px;
+    }
+
+    .micro,
+    .section-kicker,
+    .label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .micro,
+    .section-kicker {
+      color: var(--primary);
+    }
+
+    .label {
+      color: var(--text-soft);
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-soft);
+      font-size: 0.92rem;
+    }
+
+    .nav-pill,
+    .nav-cta,
+    .button-primary,
+    .button-secondary,
+    .button-soft {
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-pill,
+    .nav-cta {
+      min-height: 40px;
+      padding: 0 14px;
+    }
+
+    .nav-pill {
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid var(--line);
+    }
+
+    .nav-cta {
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 10px 20px rgba(14, 103, 216, 0.18);
+    }
+
+    .hero {
+      padding: 28px 0 64px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.98fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 26px 4px 12px 0;
+    }
+
+    .hero-badge {
+      width: fit-content;
+      min-height: 42px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      background: var(--mint-soft);
+      color: var(--mint);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .hero-badge::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .hero-title {
+      margin: 18px 0 18px;
+      font-size: clamp(3rem, 8vw, 5.7rem);
+      line-height: 0.94;
+      letter-spacing: -0.07em;
+      font-weight: 800;
+      max-width: 9ch;
+      text-wrap: balance;
+    }
+
+    .hero-title span {
+      color: var(--primary);
+    }
+
+    .hero-body,
+    .section-text,
+    .copy {
+      color: var(--text-soft);
+      line-height: 1.8;
+    }
+
+    .hero-body {
+      max-width: 37rem;
+      margin: 0 0 26px;
+      font-size: 1.02rem;
+      max-width: 33rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .hero-stage {
+      position: relative;
+      min-height: calc(100svh - 112px);
+      border-radius: 40px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 78% 24%, rgba(14, 103, 216, 0.22), transparent 18%),
+        radial-gradient(circle at 84% 72%, rgba(16, 149, 111, 0.14), transparent 16%),
+        linear-gradient(135deg, #0b1118 0%, #102032 46%, #0f1620 100%);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .hero-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.9) 45%, rgba(0, 0, 0, 0.9));
+      pointer-events: none;
+    }
+
+    .hero-stage::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 38%;
+      background: linear-gradient(180deg, rgba(8, 18, 32, 0), rgba(8, 18, 32, 0.56));
+      pointer-events: none;
+    }
+
+    .hero-overlay {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 560px);
+      padding: 76px 56px 108px;
+      color: #f5f8fc;
+    }
+
+    .hero-brand {
+      margin: 0 0 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .hero-note {
+      margin: 0;
+      max-width: 32rem;
+      color: rgba(255, 255, 255, 0.74);
+      line-height: 1.68;
+      font-size: 0.94rem;
+    }
+
+    .hero-ribbon {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      min-height: 72px;
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      border-radius: 24px;
+      background: rgba(245, 248, 252, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-ribbon strong {
+      font-size: 0.84rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .hero-ribbon span {
+      color: #ffffff;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .hero-ribbon span {
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .hero-ribbon span::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.42);
+      transform: translateY(-50%);
+    }
+
+    .hero-showcase {
+      position: absolute;
+      right: 32px;
+      top: 34px;
+      bottom: 108px;
+      width: min(44vw, 560px);
+      z-index: 1;
+      perspective: 1400px;
+      pointer-events: none;
+      filter: saturate(1.04);
+    }
+
+    .hero-showcase::after {
+      content: "";
+      position: absolute;
+      inset: auto 8% 2% 8%;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(5, 11, 18, 0.48);
+      filter: blur(16px);
+    }
+
+    .showcase-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translate3d(0, 24px, 0) scale(0.96) rotateX(7deg);
+      transition: opacity 520ms ease, transform 520ms ease;
+      display: grid;
+      align-items: center;
+    }
+
+    .hero-stage[data-visual="0"] .showcase-slide[data-slide="0"],
+    .hero-stage[data-visual="1"] .showcase-slide[data-slide="1"],
+    .hero-stage[data-visual="2"] .showcase-slide[data-slide="2"] {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+    }
+
+    .showcase-shell {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 34px;
+      overflow: hidden;
+    }
+
+    .screen-stack {
+      position: absolute;
+      inset: 6% 8% 8%;
+    }
+
+    .screen-layer {
+      position: absolute;
+      inset: 0;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+        #111a24;
+      box-shadow: 0 24px 40px rgba(4, 9, 16, 0.32);
+    }
+
+    .screen-layer.back {
+      transform: translate3d(42px, 36px, -80px) rotateY(-13deg) rotateX(8deg);
+      opacity: 0.32;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
+        #0d141d;
+    }
+
+    .screen-layer.mid {
+      transform: translate3d(20px, 16px, -30px) rotateY(-8deg) rotateX(5deg);
+      opacity: 0.62;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+        #0f1721;
+    }
+
+    .screen-layer.front {
+      transform: rotateY(-2deg) rotateX(2deg);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.08)),
+        #0e1620;
+    }
+
+    .screen-ui {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: 58px 1fr;
+    }
+
+    .screen-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: rgba(244, 247, 251, 0.88);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .dot-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot-group span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .screen-content {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .screen-content::before {
+      content: "";
+      position: absolute;
+      inset: 58px 0 0 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 18%),
+        radial-gradient(circle at top right, rgba(103, 165, 255, 0.12), transparent 24%);
+      pointer-events: none;
+    }
+
+    .chart-block {
+      min-height: 128px;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+        center center / cover no-repeat var(--dashboard-image);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .signal-row-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .signal-card {
+      min-height: 88px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: rgba(244, 247, 251, 0.88);
+    }
+
+    .signal-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.08rem;
+      letter-spacing: -0.03em;
+    }
+
+    .voice-scene {
+      position: absolute;
+      inset: 10% 10% 12%;
+      display: grid;
+      gap: 14px;
+      align-content: center;
+    }
+
+    .voice-panel,
+    .voice-transcript,
+    .voice-question {
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .voice-panel {
+      padding: 22px;
+    }
+
+    .voice-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(244, 247, 251, 0.84);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    .waveform {
+      display: grid;
+      grid-template-columns: repeat(18, 1fr);
+      gap: 6px;
+      align-items: end;
+      min-height: 96px;
+    }
+
+    .waveform span {
+      border-radius: 999px;
+      background: linear-gradient(180deg, #7dd9bd, #67a5ff);
+      animation: voice-wave 1.5s ease-in-out infinite;
+      transform-origin: bottom;
+    }
+
+    .waveform span:nth-child(3n) { animation-delay: 0.12s; }
+    .waveform span:nth-child(4n) { animation-delay: 0.24s; }
+    .waveform span:nth-child(5n) { animation-delay: 0.36s; }
+
+    .voice-transcript,
+    .voice-question {
+      padding: 18px 20px;
+      color: rgba(244, 247, 251, 0.84);
+      line-height: 1.68;
+    }
+
+    .voice-transcript strong,
+    .voice-question strong {
+      display: block;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .orb-scene {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .orb-core {
+      position: relative;
+      width: min(54%, 260px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.08) 24%, rgba(103, 165, 255, 0.34) 48%, rgba(6, 17, 28, 0.06) 70%),
+        linear-gradient(135deg, rgba(103, 165, 255, 0.62), rgba(120, 216, 187, 0.32));
+      box-shadow:
+        inset -20px -26px 34px rgba(6, 17, 28, 0.32),
+        0 34px 80px rgba(6, 17, 28, 0.34);
+      animation: float-orb 6s ease-in-out infinite;
+    }
+
+    .orb-ring {
+      position: absolute;
+      inset: -18%;
+      border-radius: 50%;
+      border: 1px solid rgba(103, 165, 255, 0.24);
+      transform: rotateX(74deg);
+    }
+
+    .orb-card {
+      position: absolute;
+      min-width: 180px;
+      padding: 16px 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: rgba(244, 247, 251, 0.86);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 34px rgba(6, 17, 28, 0.24);
+    }
+
+    .orb-card span {
+      color: rgba(244, 247, 251, 0.58);
+    }
+
+    .orb-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .orb-card.a { top: 16%; left: 8%; }
+    .orb-card.b { top: 22%; right: 10%; }
+    .orb-card.c { bottom: 18%; left: 14%; }
+    .orb-card.d { bottom: 14%; right: 16%; }
+
+    .visual-dots {
+      position: absolute;
+      right: 40px;
+      bottom: 134px;
+      z-index: 2;
+      display: flex;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .visual-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.24);
+      transition: transform 220ms ease, background-color 220ms ease;
+    }
+
+    .hero-stage[data-visual="0"] .visual-dots span:nth-child(1),
+    .hero-stage[data-visual="1"] .visual-dots span:nth-child(2),
+    .hero-stage[data-visual="2"] .visual-dots span:nth-child(3) {
+      background: #ffffff;
+      transform: scale(1.15);
+    }
+
+    .button-primary,
+    .button-secondary,
+    .button-soft {
+      min-height: 56px;
+      padding: 0 22px;
+      font-weight: 700;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .button-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary-strong), var(--primary));
+      box-shadow: 0 14px 28px rgba(14, 103, 216, 0.22);
+    }
+
+    .button-secondary {
+      color: var(--text);
+      background: #fff;
+      border: 1px solid var(--line-strong);
+    }
+
+    .button-soft {
+      min-height: 44px;
+      padding: 0 16px;
+      color: var(--primary-strong);
+      background: var(--primary-soft);
+    }
+
+    .button-primary:hover,
+    .button-secondary:hover,
+    .button-soft:hover {
+      transform: translateY(-1px);
+    }
+
+    .hero-points,
+    .kpi-grid,
+    .summary-grid,
+    .benefits,
+    .personas {
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero-points {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .point,
+    .hero-visual,
+    .kpi-card,
+    .tab-nav,
+    .tab-panel,
+    .benefit,
+    .persona,
+    .faq-item,
+    .cta-panel {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .point {
+      padding: 16px 18px;
+      border-radius: var(--radius-md);
+    }
+
+    .point strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .point span {
+      color: var(--text-soft);
+      font-size: 0.92rem;
+      line-height: 1.62;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 660px;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(10, 24, 38, 0.08), rgba(10, 24, 38, 0.45)),
+        var(--hero-image) center center / cover no-repeat;
+    }
+
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 48%;
+      background: linear-gradient(180deg, rgba(10, 24, 38, 0), rgba(10, 24, 38, 0.72));
+    }
+
+    .visual-floating,
+    .visual-summary {
+      position: absolute;
+      z-index: 1;
+      background: rgba(248, 251, 255, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      box-shadow: var(--shadow);
+    }
+
+    .visual-floating {
+      top: 22px;
+      right: 22px;
+      width: min(280px, calc(100% - 44px));
+      padding: 20px;
+      border-radius: 26px;
+    }
+
+    .visual-summary {
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      padding: 20px;
+      border-radius: 28px;
+    }
+
+    .signal-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .signal {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--surface-soft);
+      border: 1px solid rgba(217, 226, 238, 0.86);
+    }
+
+    .signal strong {
+      font-size: 1rem;
+      color: var(--primary-strong);
+      letter-spacing: -0.02em;
+    }
+
+    .summary-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .summary-box {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(217, 226, 238, 0.86);
+    }
+
+    .summary-box strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.12rem;
+      letter-spacing: -0.03em;
+    }
+
+    .kpi-strip {
+      padding-top: 20px;
+    }
+
+    .kpi-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .kpi-card {
+      min-height: 92px;
+      padding: 16px 8px 12px 0;
+      border-radius: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .kpi-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.08rem;
+      letter-spacing: -0.03em;
+    }
+
+    .section {
+      padding: 88px 0;
+    }
+
+    .section-head {
+      max-width: 640px;
+      margin-bottom: 34px;
+    }
+
+    .section-title {
+      margin: 14px 0 0;
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      font-weight: 800;
+    }
+
+    .feature-shell {
+      display: grid;
+      grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .tab-nav {
+      padding: 16px;
+      border-radius: var(--radius-xl);
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .tab-button {
+      width: 100%;
+      text-align: left;
+      padding: 16px 18px;
+      border-radius: 20px;
+      transition: background-color 140ms ease, border-color 140ms ease;
+      border: 1px solid transparent;
+    }
+
+    .tab-button.is-active {
+      background: var(--primary-soft);
+      border-color: rgba(14, 103, 216, 0.18);
+    }
+
+    .tab-button strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .tab-button span {
+      display: block;
+      margin-top: 6px;
+      color: var(--text-soft);
+      line-height: 1.58;
+      font-size: 0.92rem;
+    }
+
+    .tab-panel {
+      padding: 26px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(244, 248, 253, 0.98));
+    }
+
+    .tab-panel[hidden] {
+      display: none;
+    }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel-copy h3 {
+      margin: 12px 0 12px;
+      font-size: 2rem;
+      line-height: 1.04;
+      letter-spacing: -0.05em;
+    }
+
+    .panel-copy p,
+    .benefit p,
+    .persona p,
+    .mini-card p,
+    .faq-answer,
+    .cta-grid p {
+      color: var(--text-soft);
+      line-height: 1.78;
+    }
+
+    .panel-copy p {
+      margin: 0 0 22px;
+    }
+
+    .bullet-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .bullet {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+      line-height: 1.72;
+    }
+
+    .bullet::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: inset 0 0 0 4px #fff;
+    }
+
+    .panel-side {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.12rem;
+      letter-spacing: -0.03em;
+    }
+
+    .mini-card p {
+      margin: 8px 0 0;
+      font-size: 0.92rem;
+    }
+
+    .preview-box {
+      min-height: 260px;
+      border-radius: 24px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.14)),
+        var(--dashboard-image) center center / cover no-repeat;
+      border: 1px solid rgba(217, 226, 238, 0.84);
+    }
+
+    .benefits,
+    .personas {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .benefit,
+    .persona {
+      border-radius: 28px;
+      padding: 24px;
+    }
+
+    .tag {
+      width: fit-content;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: var(--primary-soft);
+      color: var(--primary-strong);
+    }
+
+    .tag.safe {
+      background: var(--mint-soft);
+      color: var(--mint);
+    }
+
+    .tag.warn {
+      background: var(--amber-soft);
+      color: #9c6a00;
+    }
+
+    .benefit h3,
+    .persona h3 {
+      margin: 14px 0 10px;
+      font-size: 1.3rem;
+      line-height: 1.06;
+      letter-spacing: -0.04em;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .faq-item {
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      text-align: left;
+    }
+
+    .faq-question strong {
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .faq-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-soft);
+      color: var(--primary-strong);
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+
+    .faq-answer {
+      padding: 0 22px 22px;
+    }
+
+    .faq-item[data-open="false"] .faq-answer {
+      display: none;
+    }
+
+    .faq-item[data-open="true"] .faq-icon {
+      transform: rotate(45deg);
+    }
+
+    .cta-panel {
+      border-radius: 36px;
+      padding: 36px;
+      background:
+        radial-gradient(circle at top right, rgba(14, 103, 216, 0.12), transparent 24%),
+        linear-gradient(180deg, #ffffff 0%, #f6f9fd 100%);
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .cta-grid h2 {
+      margin: 12px 0 0;
+      font-size: clamp(2rem, 4vw, 2.95rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+      font-weight: 800;
+      max-width: 12ch;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .footer {
+      padding: 24px 0 40px;
+      color: var(--text-soft);
+      font-size: 0.9rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .feature-shell,
+      .panel-grid,
+      .cta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stage {
+        min-height: 860px;
+      }
+
+      .hero-showcase {
+        position: relative;
+        right: auto;
+        top: auto;
+        bottom: auto;
+        width: min(100%, 720px);
+        height: 420px;
+        margin: 0 auto 26px;
+        order: -1;
+      }
+
+      .cta-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .header-nav {
+        display: none;
+      }
+
+      .hero-points,
+      .kpi-grid,
+      .benefits,
+      .personas,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(calc(100% - 20px), var(--max-width));
+      }
+
+      .hero-title {
+        font-size: clamp(2.7rem, 13vw, 4.5rem);
+      }
+
+      .hero-body {
+        font-size: 1rem;
+      }
+
+      .hero-stage {
+        min-height: 620px;
+      }
+
+      .hero-overlay {
+        width: 100%;
+        padding: 34px 22px 112px;
+      }
+
+      .hero-ribbon {
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+      }
+
+      .hero-showcase {
+        height: 320px;
+      }
+
+      .voice-scene {
+        inset: 8% 7% 10%;
+      }
+
+      .visual-dots {
+        right: 20px;
+        bottom: 124px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @keyframes voice-wave {
+      0%, 100% { transform: scaleY(0.35); opacity: 0.6; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    @keyframes float-orb {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">DC</span>
+        <div class="brand-copy">
+          <span class="micro">Nursing Education Program</span>
+          <span class="brand-title">Digital Clinician</span>
+        </div>
+      </div>
+      <nav class="header-nav" aria-label="랜딩 바로가기">
+        <a class="nav-pill" href="#features">핵심 기능</a>
+        <a class="nav-pill" href="#benefits">도입 효과</a>
+        <a class="nav-pill" href="#faq">자주 묻는 질문</a>
+        <a class="nav-cta" href="/index.html">현재 메인 비교</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-stage" id="demo">
+          <div class="hero-showcase" aria-hidden="true">
+            <section class="showcase-slide" data-slide="0">
+              <div class="showcase-shell">
+                <div class="screen-stack">
+                  <div class="screen-layer back"></div>
+                  <div class="screen-layer mid"></div>
+                  <div class="screen-layer front">
+                    <div class="screen-ui">
+                      <div class="screen-topbar">
+                        <span>Simulation Dashboard</span>
+                        <div class="dot-group"><span></span><span></span><span></span></div>
+                      </div>
+                      <div class="screen-content">
+                        <div class="chart-block"></div>
+                        <div class="signal-row-grid">
+                          <div class="signal-card"><span class="label">산소</span><strong>2 L/min</strong></div>
+                          <div class="signal-card"><span class="label">남은 업무</span><strong>5건</strong></div>
+                          <div class="signal-card"><span class="label">안전 위험</span><strong>3건</strong></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="showcase-slide" data-slide="1">
+              <div class="showcase-shell">
+                <div class="voice-scene">
+                  <div class="voice-panel">
+                    <div class="voice-meta">
+                      <span>Voice Handoff Session</span>
+                      <span>REC 02:14</span>
+                    </div>
+                    <div class="waveform">
+                      <span style="height:28%"></span><span style="height:52%"></span><span style="height:76%"></span><span style="height:42%"></span><span style="height:68%"></span><span style="height:36%"></span><span style="height:86%"></span><span style="height:48%"></span><span style="height:72%"></span><span style="height:32%"></span><span style="height:58%"></span><span style="height:84%"></span><span style="height:46%"></span><span style="height:70%"></span><span style="height:30%"></span><span style="height:62%"></span><span style="height:82%"></span><span style="height:44%"></span>
+                    </div>
+                  </div>
+                  <div class="voice-transcript">
+                    <strong>실시간 인계 요약</strong>
+                    환자는 보행 시 산소포화도 저하가 있고, 크레아티닌 상승과 저칼륨이 지속되어 오늘 오전 재평가가 필요합니다.
+                  </div>
+                  <div class="voice-question">
+                    <strong>AI 수신자 질문</strong>
+                    다음 근무자가 가장 먼저 확인해야 할 위험과 남은 업무를 한 문장으로 정리해 주세요.
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="showcase-slide" data-slide="2">
+              <div class="showcase-shell">
+                <div class="orb-scene">
+                  <div class="orb-core">
+                    <div class="orb-ring"></div>
+                  </div>
+                  <div class="orb-card a"><span class="label">Program Loop</span><strong>차트 → 인계 → 질문</strong></div>
+                  <div class="orb-card b"><span class="label">Education</span><strong>신규 간호사 반복 실습</strong></div>
+                  <div class="orb-card c"><span class="label">Outcome</span><strong>핵심 변화 전달 훈련</strong></div>
+                  <div class="orb-card d"><span class="label">Review</span><strong>결과 리포트 복기</strong></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="visual-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+
+          <div class="hero-overlay">
+            <span class="hero-badge">현장형 간호 인수인계 훈련</span>
+            <p class="hero-brand">Digital Clinician</p>
+            <h1 class="hero-title">교대 전 3분,<br><span>핵심만 인계.</span></h1>
+            <p class="hero-body">차트를 읽고, 음성으로 인계하고, AI 질문과 피드백으로 마무리하는 간호 인수인계 교육 프로그램. 신규 간호사 교육과 프리셉터 실습에 바로 소개하기 쉬운 첫 화면으로 다시 정리했습니다.</p>
+
+            <div class="hero-actions">
+              <a class="button-primary" href="#features">기능 보기</a>
+              <a class="button-secondary" href="/index.html">현재 메인 비교</a>
+              <button class="button-soft" type="button" data-action="jump-demo">훈련 장면 보기</button>
+            </div>
+
+            <p class="hero-note">신규 간호사 교육 · 프리셉터 실습 · 병동 커뮤니케이션 훈련</p>
+          </div>
+
+          <div class="hero-ribbon">
+            <strong>훈련 흐름</strong>
+            <span>다일자 차트 검토</span>
+            <span>음성 기반 SBAR 인계</span>
+            <span>AI 수신자 질문</span>
+            <span>결과 리포트 복기</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="container kpi-strip">
+        <div class="kpi-grid">
+          <article class="kpi-card">
+            <span class="label">활용 대상</span>
+            <strong>신규 간호사 교육</strong>
+          </article>
+          <article class="kpi-card">
+            <span class="label">실습 방식</span>
+            <strong>차트 검토 + 음성 인계</strong>
+          </article>
+          <article class="kpi-card">
+            <span class="label">도입 포인트</span>
+            <strong>핵심 변화 전달 훈련</strong>
+          </article>
+          <article class="kpi-card">
+            <span class="label">피드백</span>
+            <strong>AI 질문 + 결과 리포트</strong>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">핵심 기능</span>
+          <h2 class="section-title">이 프로그램이 실제로 무엇을 해주는지 바로 이해되도록 구성했습니다</h2>
+          <p class="section-text">제품 소개 페이지답게 감성보다 기능 구조를 먼저 보이게 했고, 간호사 입장에서 실제로 도움이 되는지가 느껴지도록 한국어 카피를 다시 정리했습니다.</p>
+        </div>
+
+        <div class="feature-shell">
+          <div class="tab-nav" role="tablist" aria-label="핵심 기능 탭">
+            <button class="tab-button is-active" type="button" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1" data-tab="panel-1">
+              <strong>다일자 차트 기반 상황 파악</strong>
+              <span>단일 스냅샷이 아니라 며칠 간의 변화 흐름을 읽고 핵심만 정리합니다.</span>
+            </button>
+            <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" data-tab="panel-2">
+              <strong>음성 중심 인수인계 연습</strong>
+              <span>실제 교대처럼 말하면서 전달력과 우선순위 구성을 훈련합니다.</span>
+            </button>
+            <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-3" id="tab-3" data-tab="panel-3">
+              <strong>AI 질문과 구조화 피드백</strong>
+              <span>빠진 내용, 안전 리스크, 후속 업무 전달 여부를 끝에서 다시 점검합니다.</span>
+            </button>
+          </div>
+
+          <div>
+            <section class="tab-panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1">
+              <div class="panel-grid">
+                <div class="panel-copy">
+                  <span class="section-kicker">Feature 01</span>
+                  <h3>변화 중심으로 읽는 차트 흐름</h3>
+                  <p>실제 인수인계에서는 무슨 병인지보다 어제와 오늘이 어떻게 달라졌는지가 더 중요합니다. 이 화면은 산소 요구도, 신기능, 전해질, 낙상 위험, 남은 업무처럼 다음 근무자가 바로 행동할 수 있는 정보를 우선 보게 만듭니다.</p>
+                  <div class="bullet-list">
+                    <div class="bullet"><span>하루치 요약이 아닌 다일자 변화 비교</span></div>
+                    <div class="bullet"><span>현재 위험과 남은 업무를 먼저 인식하는 구조</span></div>
+                    <div class="bullet"><span>교육자가 케이스 방향을 설명하기 쉬운 첫 화면</span></div>
+                  </div>
+                </div>
+                <div class="panel-side">
+                  <div class="preview-box" aria-hidden="true"></div>
+                  <div class="mini-card">
+                    <span class="section-kicker">케이스 예시</span>
+                    <strong>심부전 + 폐렴 + 심방세동</strong>
+                    <p>현재처럼 여러 축이 동시에 흔들리는 환자일수록 인수인계 훈련 효과가 더 분명하게 드러납니다.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="tab-panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
+              <div class="panel-grid">
+                <div class="panel-copy">
+                  <span class="section-kicker">Feature 02</span>
+                  <h3>말로 전달하는 힘을 직접 훈련</h3>
+                  <p>이 프로그램은 문서를 읽는 데서 끝나지 않습니다. 사용자가 실제로 음성 인계를 수행하고, 전사된 내용을 다시 확인하면서 내가 정말 필요한 것을 말했는지 스스로 점검하게 만듭니다.</p>
+                  <div class="bullet-list">
+                    <div class="bullet"><span>SBAR 흐름을 자연스럽게 연습</span></div>
+                    <div class="bullet"><span>전사 검토로 빠진 표현을 즉시 수정</span></div>
+                    <div class="bullet"><span>짧게 여러 번 반복하기 좋은 실습 구조</span></div>
+                  </div>
+                </div>
+                <div class="panel-side">
+                  <div class="mini-card">
+                    <span class="section-kicker">교육 포인트</span>
+                    <strong>정보량보다 전달 순서</strong>
+                    <p>많이 말하는 것이 아니라, 위험 신호와 후속 업무를 먼저 말하는 습관을 만드는 데 초점을 둡니다.</p>
+                  </div>
+                  <div class="mini-card">
+                    <span class="section-kicker">운영 장점</span>
+                    <strong>프리셉터 실습과 병행하기 쉬움</strong>
+                    <p>한 세션이 과도하게 길지 않아 신규 간호사 교육 시간표 안에서도 부담 없이 운영할 수 있습니다.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="tab-panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
+              <div class="panel-grid">
+                <div class="panel-copy">
+                  <span class="section-kicker">Feature 03</span>
+                  <h3>질문과 피드백으로 복습까지 연결</h3>
+                  <p>인수인계는 말하는 순간 끝나는 것이 아니라, 상대가 들었을 때 충분했는지가 중요합니다. AI 수신자 질문과 구조화 리포트는 빠진 정보, 안전 이슈, 남은 업무 전달 여부를 끝에서 다시 확인하게 도와줍니다.</p>
+                  <div class="bullet-list">
+                    <div class="bullet"><span>중요한 빠짐을 질문 형태로 다시 드러냄</span></div>
+                    <div class="bullet"><span>완성도, 우선순위, 안전성 기준으로 복습 가능</span></div>
+                    <div class="bullet"><span>교육자 코멘트 부담을 줄이는 보조 역할</span></div>
+                  </div>
+                </div>
+                <div class="panel-side">
+                  <div class="mini-card">
+                    <span class="section-kicker">예시 질문</span>
+                    <strong>지금 가장 먼저 봐야 할 위험은 무엇인가요?</strong>
+                    <p>실제 교대 상황에서 바로 이어질 법한 질문 형태로 설계해 학습 몰입을 유지합니다.</p>
+                  </div>
+                  <div class="mini-card">
+                    <span class="section-kicker">예시 결과</span>
+                    <strong>빠진 정보와 전달 순서를 바로 복기</strong>
+                    <p>단순 점수보다 다음 번 인계를 더 잘하게 만드는 피드백에 집중합니다.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="benefits">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">도입 효과</span>
+          <h2 class="section-title">간호사가 한번 써보고 싶다고 느끼는 지점을 앞에 두었습니다</h2>
+          <p class="section-text">기능이 많다는 설명보다 실제로 어떤 도움을 받는지가 더 중요하므로, 사용자가 체감할 수 있는 장점을 제품 소개 문장으로 정리했습니다.</p>
+        </div>
+
+        <div class="benefits">
+          <article class="benefit">
+            <span class="tag safe">현장감</span>
+            <h3>교대 직전의 압박감을 실제처럼 연습할 수 있습니다</h3>
+            <p>차트를 보고 바로 말해야 하는 흐름이 이어져 실제 교대에 가까운 리듬으로 훈련할 수 있습니다.</p>
+          </article>
+          <article class="benefit">
+            <span class="tag">반복성</span>
+            <h3>짧게 여러 번 반복하기 좋은 구조입니다</h3>
+            <p>신규 간호사 교육에서 한 번 길게 설명하기보다 짧은 세션을 여러 번 돌리는 운영 방식에 잘 맞습니다.</p>
+          </article>
+          <article class="benefit">
+            <span class="tag warn">안전성</span>
+            <h3>빠뜨리면 위험한 내용을 먼저 보게 만듭니다</h3>
+            <p>산소화, 전해질, 낙상 위험, 남은 업무처럼 다음 근무자에게 꼭 남겨야 하는 내용을 중심으로 설계했습니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">사용 장면</span>
+          <h2 class="section-title">누가 어디서 바로 활용할 수 있는지도 같이 보여줍니다</h2>
+          <p class="section-text">제품 소개 페이지는 보는 순간 우리 팀에서 어디에 쓸 수 있는지가 떠올라야 하므로 역할별 사용 장면을 같이 붙였습니다.</p>
+        </div>
+
+        <div class="personas">
+          <article class="persona">
+            <span class="tag">신규 간호사</span>
+            <h3>교대 전에 무엇을 우선 말해야 할지 감을 잡습니다</h3>
+            <p>막연한 자신감보다 실제 차트 흐름 안에서 우선순위를 잡고 말하는 연습을 반복할 수 있습니다.</p>
+          </article>
+          <article class="persona">
+            <span class="tag">프리셉터</span>
+            <h3>실습 내용을 구조적으로 확인하기 쉬워집니다</h3>
+            <p>인계 내용, 빠진 정보, 후속 업무 전달 여부를 한 흐름에서 보조적으로 점검할 수 있습니다.</p>
+          </article>
+          <article class="persona">
+            <span class="tag">교육 담당자</span>
+            <h3>교육 소개용 화면으로도 바로 설명할 수 있습니다</h3>
+            <p>차트 검토, 음성 인계, AI 피드백의 구조가 명확해 도입 설명에 적합한 첫 화면이 됩니다.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-head">
+          <span class="section-kicker">자주 묻는 질문</span>
+          <h2 class="section-title">소개 페이지에 필요한 신뢰 포인트도 넣었습니다</h2>
+          <p class="section-text">기능 소개만으로는 부족하므로, 교육용 제품으로서 가장 많이 묻게 될 질문을 가벼운 아코디언으로 정리했습니다.</p>
+        </div>
+
+        <div class="faq-list">
+          <article class="faq-item" data-open="true">
+            <button class="faq-question" type="button">
+              <strong>이 프로그램은 실제 병동 인수인계와 얼마나 비슷한가요?</strong>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">다일자 차트 검토, 현재 위험 파악, 음성 인계, 후속 질문, 결과 피드백의 흐름으로 구성해 실제 교대 상황의 핵심 리듬을 교육용으로 압축했습니다.</div>
+          </article>
+          <article class="faq-item" data-open="false">
+            <button class="faq-question" type="button">
+              <strong>신규 간호사 교육에서 바로 사용할 수 있나요?</strong>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">짧은 세션 단위로 반복 실습하기 좋도록 구성되어 있어 신규 간호사 교육이나 프리셉터 지도 상황에서 바로 소개하기 쉬운 형태입니다.</div>
+          </article>
+          <article class="faq-item" data-open="false">
+            <button class="faq-question" type="button">
+              <strong>왜 이번 테스트 화면은 스크롤이 더 가볍게 느껴지나요?</strong>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">스크롤할 때마다 위치를 계산하는 패럴랙스나 복잡한 스크롤 애니메이션을 제거하고, 탭과 FAQ처럼 클릭 기반 상호작용만 남겨 렉 가능성을 줄였습니다.</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-panel">
+          <div class="cta-grid">
+            <div>
+              <span class="section-kicker">비교용 테스트 화면</span>
+              <h2>이제는 제품 소개 랜딩답게 보이는지 바로 비교할 수 있습니다</h2>
+              <p>기존 앱 구조는 건드리지 않았고 이 파일 하나만 다시 만들었습니다. 현재 메인과 나란히 열어보면 제품 소개 톤, 기능 설명 방식, 간호사 입장에서의 매력도, 그리고 스크롤 체감 성능 차이를 바로 확인할 수 있습니다.</p>
+            </div>
+            <div class="cta-actions">
+              <a class="button-primary" href="/index.html">현재 메인 보기</a>
+              <a class="button-secondary" href="/index.frontend-skill.html">이 테스트 화면 유지</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>비교용 단일 파일만 수정했습니다.</span>
+      <span>Pretendard 적용, 클릭형 인터랙션만 유지</span>
+    </div>
+  </footer>
+  <script>
+    (function () {
+      const tabs = Array.from(document.querySelectorAll(".tab-button"));
+      const panels = Array.from(document.querySelectorAll(".tab-panel"));
+      const faqs = Array.from(document.querySelectorAll(".faq-item"));
+      const jumpButton = document.querySelector("[data-action='jump-demo']");
+      const heroStage = document.querySelector(".hero-stage");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let visualIndex = 0;
+      let visualTimer = null;
+
+      function activateTab(id) {
+        tabs.forEach(function (tab) {
+          const active = tab.dataset.tab === id;
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", active ? "true" : "false");
+        });
+
+        panels.forEach(function (panel) {
+          panel.hidden = panel.id !== id;
+        });
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          activateTab(tab.dataset.tab);
+        });
+      });
+
+      faqs.forEach(function (item) {
+        const button = item.querySelector(".faq-question");
+        if (!button) return;
+        button.addEventListener("click", function () {
+          const open = item.getAttribute("data-open") === "true";
+          item.setAttribute("data-open", open ? "false" : "true");
+        });
+      });
+
+      if (jumpButton) {
+        jumpButton.addEventListener("click", function () {
+          const target = document.getElementById("demo");
+          if (!target) return;
+          target.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+      }
+
+      function renderVisual(index) {
+        if (!heroStage) return;
+        heroStage.setAttribute("data-visual", String(index));
+      }
+
+      function startVisualLoop() {
+        if (!heroStage || reduceMotion) return;
+        renderVisual(0);
+        visualTimer = window.setInterval(function () {
+          visualIndex = (visualIndex + 1) % 3;
+          renderVisual(visualIndex);
+        }, 4200);
+      }
+
+      function stopVisualLoop() {
+        if (!visualTimer) return;
+        window.clearInterval(visualTimer);
+        visualTimer = null;
+      }
+
+      if (heroStage) {
+        renderVisual(0);
+        startVisualLoop();
+        heroStage.addEventListener("mouseenter", stopVisualLoop);
+        heroStage.addEventListener("mouseleave", startVisualLoop);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,4 +1,1 @@
-const { handler } = require("../src/server/handlers/patientsApi");
-const { toVercelHandler } = require("../src/server/adapters/toVercelHandler");
-
-module.exports = toVercelHandler(handler);
+module.exports = require("../api-server/routes/patients");

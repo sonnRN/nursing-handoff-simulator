@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { handler } = require("../src/server/handlers/patientsApi");
+const { handler } = require("../api-server/handlers/patientsApi");
 
 const EXPECTED_WARD_COUNTS = new Map([
   ["내과계중환자실", 10],

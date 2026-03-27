@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { toVercelHandler } = require("../src/server/adapters/toVercelHandler");
+const { toVercelHandler } = require("../api-server/adapters/toVercelHandler");
 
 function createResponseRecorder() {
   return {

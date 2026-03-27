@@ -1,6 +1,6 @@
 const assert = require("assert");
-const { getScenario } = require("../src/simulation/scenario");
-const { handler } = require("../src/server/handlers/simulationApi");
+const { getScenario } = require("../backend/simulation/scenario");
+const { handler } = require("../api-server/handlers/simulationApi");
 
 async function main() {
   const scenario = getScenario();

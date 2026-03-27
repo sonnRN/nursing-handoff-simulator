@@ -1,6 +1,6 @@
 const assert = require("assert");
-const { fetchPatientList } = require("../src/harness/runtime/fetchFhirPatients");
-const { loadLocalDemoPatients } = require("../src/harness/runtime/loadLocalDemoPatients");
+const { fetchPatientList } = require("../backend/harness/runtime/fetchFhirPatients");
+const { loadLocalDemoPatients } = require("../backend/harness/runtime/loadLocalDemoPatients");
 
 const REQUIRED_HEADER_FIELDS = [
   "id",

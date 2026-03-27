@@ -2,7 +2,7 @@ const assert = require("assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { createPatientDataGateway } = require("../src/mcp/runtime/patientDataGateway");
+const { createPatientDataGateway } = require("../backend/mcp/runtime/patientDataGateway");
 
 function jsonResponse(body) {
   return {

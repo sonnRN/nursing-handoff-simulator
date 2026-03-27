@@ -1,9 +1,8 @@
 const assert = require("assert");
 const fs = require("fs");
-const path = require("path");
+const { FILE_PATHS } = require("../repo-paths");
 
-const ROOT = path.resolve(__dirname, "..");
-const bundleFile = path.join(ROOT, "public-demo-data", "patients-bundle.json");
+const bundleFile = FILE_PATHS.db.publicDemoBundle;
 
 function main() {
   assert(fs.existsSync(bundleFile), "public demo bundle file is missing");

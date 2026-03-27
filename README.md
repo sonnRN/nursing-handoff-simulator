@@ -82,6 +82,23 @@ When `OPENAI_API_KEY` is not set:
 - otherwise the learner can review and edit text manually
 - follow-up questions and scoring use the built-in deterministic evaluator
 
+## Repository Map
+
+- `frontend/`
+  - browser-facing UI assets, legacy demo assets, runtime config, and design references
+- `backend/`
+  - canonical engine, simulation logic, harness runtime, MCP runtime, and server-side services
+- `db/`
+  - synthetic source data, local seed data, public demo bundle output, and cache storage
+- `api-server/`
+  - local HTTP server, API handlers, Vercel route implementations, and server logs
+
+Compatibility entrypoints remain at the repo root:
+
+- `index.html`
+- `algorithm-demo.html`
+- `api/*.js`
+
 ## MVP Scenario
 
 The included case is a synthetic telemetry patient on hospital day 5:
@@ -139,21 +156,21 @@ These are intended for deterministic browser validation, not for end users.
 ### New / Updated
 
 - `index.html`
-  - state-based simulation shell
-- `style.css`
-  - modern clinical voice-product UI
-- `script.js`
-  - client state machine, EMR rendering, recorder flow, QA helpers
-- `src/simulation/scenario.js`
-  - single rich synthetic inpatient scenario
-- `src/simulation/evaluator.js`
-  - deterministic follow-up + scoring engine
-- `src/server/handlers/simulationApi.js`
-  - simulation API
-- `src/server/services/openaiSimulationService.js`
-  - OpenAI transcription / structured response integration
-- `api/simulation.js`
-  - Vercel-compatible route
+  - root compatibility shell for the learner-facing app
+- `frontend/ui/`
+  - modern clinical voice-product UI modules and styles
+- `frontend/legacy/`
+  - preserved algorithm demo assets and legacy browser runtime helpers
+- `backend/simulation/`
+  - single rich synthetic inpatient scenario plus deterministic follow-up and scoring logic
+- `backend/engine/`
+  - canonical handoff engine plus stage 2 augmentation layers
+- `api-server/handlers/`
+  - simulation API and patient data route handlers
+- `backend/services/openaiSimulationService.js`
+  - OpenAI transcription and structured response integration
+- `api-server/routes/` and root `api/`
+  - Vercel-compatible route implementations plus thin root wrappers
 
 ## Known Limitations
 

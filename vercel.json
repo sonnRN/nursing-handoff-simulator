@@ -2,13 +2,16 @@
   "cleanUrls": true,
   "functions": {
     "api/patients.js": {
-      "includeFiles": "src/**"
+      "includeFiles": "{api-server/**,backend/**,db/**,repo-paths.js}"
     },
     "api/patients-mcp.js": {
-      "includeFiles": "src/**"
+      "includeFiles": "{api-server/**,backend/**,db/**,repo-paths.js}"
     },
     "api/health.js": {
-      "includeFiles": "src/**"
+      "includeFiles": "{api-server/**,backend/**,db/**,repo-paths.js}"
+    },
+    "api/simulation.js": {
+      "includeFiles": "{api-server/**,backend/**,db/**,repo-paths.js}"
     }
   }
 }

@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { loadHandoffEngineApi } = require("../src/harness/runtime/loadHandoffEngineApi");
+const { loadHandoffEngineApi } = require("../backend/harness/runtime/loadHandoffEngineApi");
 
 function buildPriorityFixturePatient() {
   return {

@@ -1,5 +1,5 @@
-const { fetchSamplePatient } = require("../src/harness/runtime/fetchFhirPatients");
-const { loadHandoffEngineApi } = require("../src/harness/runtime/loadHandoffEngineApi");
+const { fetchSamplePatient } = require("../backend/harness/runtime/fetchFhirPatients");
+const { loadHandoffEngineApi } = require("../backend/harness/runtime/loadHandoffEngineApi");
 
 async function main() {
   const requestedId = process.argv[2];

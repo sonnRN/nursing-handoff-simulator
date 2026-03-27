@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { startHttpServer } = require("../src/server/httpServer");
+const { startHttpServer } = require("../api-server/server/httpServer");
 
 function jsonResponse(body) {
   return {

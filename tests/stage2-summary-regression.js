@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { loadHandoffEngineApi } = require("../src/harness/runtime/loadHandoffEngineApi");
+const { loadHandoffEngineApi } = require("../backend/harness/runtime/loadHandoffEngineApi");
 const fixtures = require("./fixtures/goldenPatients");
 const expectations = require("./fixtures/goldenExpectations");
 

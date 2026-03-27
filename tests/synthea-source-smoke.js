@@ -1,5 +1,5 @@
 const path = require("path");
-const patientsMcpHandler = require("../src/server/handlers/patientsMcpApi").handler;
+const patientsMcpHandler = require("../api-server/handlers/patientsMcpApi").handler;
 
 async function main() {
   const fixtureDir = path.join(__dirname, "fixtures", "synthea-fhir");

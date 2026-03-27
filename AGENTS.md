@@ -16,19 +16,25 @@ This repository uses a harness-first workflow so changes remain testable, review
 
 ## Working Rules
 
-- Prefer shared helpers in `src/harness/runtime/` when a test or script needs browser-side engine behavior.
+- The repository is organized around four top-level work areas:
+  - `frontend/`
+  - `backend/`
+  - `db/`
+  - `api-server/`
+- Prefer shared helpers in `backend/harness/runtime/` when a test or script needs browser-side engine behavior.
 - Prefer fixture updates in `tests/fixtures/` before editing browser runtime code.
 - Treat `npm test` as the default completion gate for handoff-engine changes.
 - Treat `docs/README.md` plus the canonical docs as the primary documentation surface.
 - Read supplemental docs only when the current task needs their extra detail.
 - Keep the app runtime and the harness runtime loosely coupled.
 - Document new structural decisions in `docs/decisions.md`.
+- Root `index.html`, `algorithm-demo.html`, and `api/*.js` are compatibility entrypoints. Prefer editing the real implementation under the four top-level domain folders.
 - Current validation commands:
   - `npm test`
   - `npm run test:stage2`
   - `npm run test:fhir:smoke`
   - `npm run test:fhir:batch`
-  - `npm run test:render`
+  - `npm run test:ui-render`
 - There are currently no separate lint, format, or build commands configured as source of truth.
 
 ## Change Order

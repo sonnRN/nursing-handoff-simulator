@@ -26,6 +26,19 @@ Use this file as the document entrypoint for agent work.
 - [Glossary](glossary.md)
   - Use when domain terms or harness terms are unclear.
 
+## Top-Level Work Areas
+
+- `../frontend/`
+  - UI, runtime config, legacy browser assets, and design references.
+- `../backend/`
+  - handoff engine, simulation logic, harness helpers, MCP runtime, and shared services.
+- `../db/`
+  - synthetic data sources, local seeds, public demo bundle output, and cache files.
+- `../api-server/`
+  - HTTP server, handlers, Vercel routes, and API-server operational files.
+
+Root `index.html`, `algorithm-demo.html`, and `api/*.js` remain as compatibility entrypoints.
+
 ## Supplemental Harness Docs
 
 - [AI Agent Guardrails](AI_AGENT_GUARDRAILS.md)

@@ -45,3 +45,17 @@ The current runtime keeps the existing date-based legacy detector as the base la
 ### Expose stage 5 and stage 6 as structured output, not only SBAR text
 
 The canonical engine now emits a dedicated `handoffOutput` object in addition to SBAR hints. It groups top-priority items, next-shift actions, carryover work, review-needed items, withheld items, and a lightweight claim matrix so reviewers can inspect the output and verification status without relying on free-form text alone.
+
+## 2026-03-27
+
+### Reorganize the repo into four top-level work domains
+
+The repository now keeps implementation files under `frontend/`, `backend/`, `db/`, and `api-server/`. This makes it easier to open a focused thread or workspace for one concern without wading through unrelated runtime files at the repo root.
+
+### Keep root HTML and root API files as compatibility entrypoints
+
+The public entry URLs still resolve through root `index.html`, `algorithm-demo.html`, and `api/*.js`, but those files are now thin compatibility shells. Real implementation work should happen inside the four domain folders.
+
+### Use a shared path manifest for moved runtime files
+
+Because tests, harness utilities, scripts, and API routes all relied on historical root-relative paths, the repository now centralizes those locations in `repo-paths.js`. Structural changes should update the manifest first instead of hardcoding new path strings in multiple places.

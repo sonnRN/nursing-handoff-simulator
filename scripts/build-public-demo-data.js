@@ -1,11 +1,11 @@
 const fs = require("fs");
 const path = require("path");
+const { FILE_PATHS } = require("../repo-paths");
 
 const ROOT = path.resolve(__dirname, "..");
-const CACHE_ROOT = path.join(ROOT, ".cache", "fhir-mcp");
-const LIST_CACHE = path.join(CACHE_ROOT, "lists", "20__start.json");
-const OUTPUT_DIR = path.join(ROOT, "public-demo-data");
-const OUTPUT_FILE = path.join(OUTPUT_DIR, "patients-bundle.json");
+const CACHE_ROOT = FILE_PATHS.db.cache.fhirMcp;
+const OUTPUT_DIR = FILE_PATHS.db.publicDemoDir;
+const OUTPUT_FILE = FILE_PATHS.db.publicDemoBundle;
 
 function ensureDir(directory) {
   fs.mkdirSync(directory, { recursive: true });
@@ -15,12 +15,30 @@ function readJson(file) {
   return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
+function firstJsonFile(directory) {
+  if (!fs.existsSync(directory)) return "";
+  return fs.readdirSync(directory)
+    .filter((file) => file.endsWith(".json"))
+    .sort()[0] || "";
+}
+
+function findDetailFile(detailsDir, patientId) {
+  const suffix = `${encodeURIComponent(patientId)}.json`;
+  return fs.readdirSync(detailsDir)
+    .filter((file) => file.endsWith(suffix))
+    .sort()[0] || "";
+}
+
 function main() {
-  if (!fs.existsSync(LIST_CACHE)) {
+  const listDir = path.join(CACHE_ROOT, "lists");
+  const detailsDir = path.join(CACHE_ROOT, "details");
+  const listCacheName = firstJsonFile(listDir);
+
+  if (!listCacheName) {
     throw new Error("FHIR list cache is missing. Warm the MCP gateway first.");
   }
 
-  const listPayload = readJson(LIST_CACHE);
+  const listPayload = readJson(path.join(listDir, listCacheName));
   const patients = Array.isArray(listPayload.patients) ? listPayload.patients : [];
 
   if (!patients.length) {
@@ -33,12 +51,12 @@ function main() {
     const id = String(patient.id || "").trim();
     if (!id) continue;
 
-    const detailFile = path.join(CACHE_ROOT, "details", `${encodeURIComponent(id)}.json`);
-    if (!fs.existsSync(detailFile)) {
+    const detailFileName = findDetailFile(detailsDir, id);
+    if (!detailFileName) {
       throw new Error(`FHIR detail cache is missing for patient ${id}`);
     }
 
-    detailsById[id] = readJson(detailFile);
+    detailsById[id] = readJson(path.join(detailsDir, detailFileName));
   }
 
   const output = {

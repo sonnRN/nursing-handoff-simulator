@@ -1,5 +1,8 @@
-.cache/
+db/.cache/
 node_modules/
+frontend/output/
+api-server/logs/
+.cache/
 output/
 server.log
 server.out.log
